@@ -21,6 +21,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 /**
  * Clase encargada de los servicios de reglas de asociacion
  * @author Kevin Zapata & Carlos Martinez
@@ -32,7 +34,7 @@ public class ReglasAsociacionServices extends Application{
     @Path("/consumir")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String asociarCuenta(@FormDataParam("file") InputStream archivo, @FormDataParam("file") FormDataContentDisposition archivoDetalles) {
+    public String asociarCuenta(@FormDataParam("file") InputStream file, @FormDataParam("file") FormDataContentDisposition fileDetail) {
         return null;
                 
     }

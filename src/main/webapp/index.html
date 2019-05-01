@@ -1,10 +1,26 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Start Page</title>
+        <title>Reglas de Asociacion - Mineria de Datos</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel='stylesheet' href='./css/bootstrap.min.css' type='text/css' media='all' />
+        <link rel='stylesheet' href='./css/style.css' type='text/css' media='all' />
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <section>
+            <h3 class="mb-4">Reglas de Asociacion</h3>
+            <div class="contenedor">
+                <form action="" method="post" enctype="multipart/form-data" class="form-inline formulario">
+                    <div class="col-md-8">
+                        <input id="file" type="file" name="file" accept=".csv, .arf"/>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary">Procesar datos</button>
+                    </div>
+                </form>
+                <div class="resultado">Resultado del analisis...</div>
+            </div>
+        </section>
+        <footer>&copy; 2019 - Carlos Martinez & Kevin Zapata</footer>
     </body>
 </html>
