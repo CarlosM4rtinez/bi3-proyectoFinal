@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Reglas de Asociacion - Mineria de Datos</title>
+        <title>Reglas de Asociacion - Mineria de Datos con Weka</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="icon" href="./recursos/icon.png" sizes="32x32" />
         <link rel='stylesheet' href='./css/bootstrap.min.css' type='text/css' media='all' />
         <link rel='stylesheet' href='./css/style.css' type='text/css' media='all' />
+        <script src="./js/jquery-3.4.1.min.js"></script>
+        <script src="./js/functions.js"></script>
     </head>
     <body>
         <section>
-            <h3 class="mb-4">Reglas de Asociacion</h3>
+            <h3 class="mb-4">Mineria de Datos con Weka</h3>
             <div class="contenedor">
-                <form action="http://localhost:8080/proyectoFinal/servicios/reglas-asociacion/consumir" method="post" enctype="multipart/form-data" class="form-inline formulario">
+                <form id="form-mineria" action="http://localhost:8080/proyectoFinal/servicios/reglas-asociacion/consumir" method="post" enctype="multipart/form-data" class="form-inline formulario">
                     <div class="col-md-7">
-                        <input id="file" type="file" name="file" accept=".csv, .arff" required/>
+                        <input id="file" data-action="http://localhost:8080/proyectoFinal/servicios/reglas-asociacion/informacion" type="file" name="file" accept=".csv, .arff" required/>
                     </div>
                     <div class="col-md-3 row">
                         <select id="algoritmo" name="algoritmo" class="form-control">
@@ -20,10 +23,10 @@
                         </select>
                     </div>
                     <div class="col-md-3 row">
-                        <button type="submit" class="btn btn-primary">Procesar datos</button>
+                        <button id="btnform-mineria" type="submit" class="btn btn-primary">Procesar datos</button>
                     </div>
                 </form>
-                <div class="resultado">Resultado del analisis...</div>
+                <div id="rta" class="resultado"><br></div>
             </div>
         </section>
         <footer>

@@ -49,5 +49,23 @@ public class ReglasAsociacionServices extends Application{
             return "Ups! ha ocurrido un error: "+io.getMessage();
         }
     }
+    /**
+     * Obtiene la informacion de un archivo
+     * @param file el archivo con el conjunto de datos (.csv, .arf) para obtener la informacion
+     * @param fileDetail detalles del archivo  que contiene los datos
+     * @return json con la informacion del archivo
+     */
+    @POST
+    @Path("informacion")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getInformacion(@FormDataParam("file") InputStream file, @FormDataParam("file") FormDataContentDisposition fileDetail){
+        try {
+            // Obtenemos la informacion del archivo
+            return raDataMining.convertir(new BufferedReader(new InputStreamReader(file)));
+        }catch (IOException io) {
+            return "Ups! ha ocurrido un error: "+io.getMessage();
+        }
+    }
 
 }

@@ -104,7 +104,7 @@ public class ReglasAsociacionDataMining implements Serializable{
                     + "<br>===========<br>";
             //Obtenemos resultados
             for (int i = 0; i < aso.getAssociationRules().getRules().size(); i++) {
-                resApriori = resApriori + "<b>" + (1 + 1) + ". Si</>"
+                resApriori = resApriori + "<b>" + (i + 1) + ". Si</>"
                         + aso.getAssociationRules().getRules().get(i).getPremise().toString();
                 resApriori = resApriori + " <b>Entonces"
                         + aso.getAssociationRules().getRules().get(i).getConsequence().toString();
