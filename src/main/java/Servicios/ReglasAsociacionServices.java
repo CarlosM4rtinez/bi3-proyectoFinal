@@ -6,7 +6,7 @@
 package Servicios;
 
 
-import MineriaDatos.ReglasAsociacionDataMining;
+import MineriaDatos.DataMining;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 import java.io.BufferedReader;
@@ -19,7 +19,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import org.apache.commons.io.FilenameUtils;
 /**
  * Clase encargada de los servicios de reglas de asociacion
  * @author Kevin Zapata & Carlos Martinez
@@ -27,7 +26,7 @@ import org.apache.commons.io.FilenameUtils;
 @Path("reglas-asociacion")
 public class ReglasAsociacionServices extends Application{
     
-    private ReglasAsociacionDataMining raDataMining = new ReglasAsociacionDataMining();
+    private DataMining dataMining = new DataMining();
 
     /**
      * Servicio a consumir que apartir de un archivo .csv, .arf devuelve los datos analizados
@@ -44,7 +43,7 @@ public class ReglasAsociacionServices extends Application{
     public String consumir(@FormDataParam("algoritmo") String algoritmo, @FormDataParam("file") InputStream file, @FormDataParam("file") FormDataContentDisposition fileDetail){
         try {
             // Pasamos a analizar el archivo usando la mineria de datos.
-            return raDataMining.mineria(raDataMining.convertir(new BufferedReader(new InputStreamReader(file))), Integer.parseInt(algoritmo));
+            return dataMining.mineria(dataMining.convertir(new BufferedReader(new InputStreamReader(file))), Integer.parseInt(algoritmo));
         }catch (IOException io) {
             return "Ups! ha ocurrido un error: "+io.getMessage();
         }
@@ -62,7 +61,7 @@ public class ReglasAsociacionServices extends Application{
     public String getInformacion(@FormDataParam("file") InputStream file, @FormDataParam("file") FormDataContentDisposition fileDetail){
         try {
             // Obtenemos la informacion del archivo
-            return raDataMining.convertir(new BufferedReader(new InputStreamReader(file)));
+            return dataMining.convertir(new BufferedReader(new InputStreamReader(file)));
         }catch (IOException io) {
             return "Ups! ha ocurrido un error: "+io.getMessage();
         }
