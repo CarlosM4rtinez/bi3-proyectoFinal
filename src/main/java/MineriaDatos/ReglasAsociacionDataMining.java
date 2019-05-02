@@ -24,25 +24,22 @@ public class ReglasAsociacionDataMining implements Serializable{
     public String apriori (Instances data){
         try {
             //Creamos el objeto de asociacion por apriori
-            Apriori aso = new Apriori();
+            Apriori a = new Apriori();
             //Creamos el descriptivo apriori con los datos
-            aso.buildAssociations(data);
+            a.buildAssociations(data);
             //Se cargan los resultados de la asociacion apriori
-            String resApriori = "<br><b><center>Resultados de asociacion "
-                    + " apriori</center></b>========<br>El modelo de asociacion "
-                    + "generado indica los siguientes resultados:"
-                    + "<br>===========<br>";
+            String rta = "<b><center>Resultados de asociacion Apriori</center></b>"
+                    + "========<br>"
+                    + "El modelo de asociacion generado indica los siguientes resultados"
+                    + "<br>===========<br><ol>";
             //Obtenemos resultados
-            for (int i = 0; i < aso.getAssociationRules().getRules().size(); i++) {
-                resApriori = resApriori + "<b>" + (i + 1) + ". Si</>"
-                        + aso.getAssociationRules().getRules().get(i).getPremise().toString();
-                resApriori = resApriori + " <b>Entonces"
-                        + aso.getAssociationRules().getRules().get(i).getConsequence().toString();
-                resApriori = resApriori + " <b>Con un "
-                        + (int) (aso.getAssociationRules().getRules().get(i).getPrimaryMetricValue() * 100)
-                        + "% de posibilidad<br>";
+            for (int i = 0; i < a.getAssociationRules().getRules().size(); i++) {
+                rta = rta+"<li align='left'>Si <b>"+a.getAssociationRules().getRules().get(i).getPremise().toString()
+                         +"</b><br>Entonces <b>"+a.getAssociationRules().getRules().get(i).getConsequence().toString()
+                         + "</b> con un <font color='green'><b>"+(int)(a.getAssociationRules().getRules().get(i).getPrimaryMetricValue() * 100)
+                         +"%</b></font> de posibilidad.<br><br></li>";
             }
-            return resApriori;
+            return rta+"</ol>";
         } catch (Exception ex) {
             return "El error es: " + ex.getMessage();
         }

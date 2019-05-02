@@ -63,12 +63,12 @@ public class DataMining implements Serializable{
      * @return el encabezado del conjunto de datos
      */
     public String encabezado(Instances data){
-        String descripcion = "<b>El atributo clase seleccionado es: "+data.attribute(data.numAttributes()-1).name() + "</b>";
-        descripcion += " <b>con posibles valores</b>";
+        String descripcion = "<b>Atributo clase:</b> "+data.attribute(data.numAttributes()-1).name()+"<br>";
+        descripcion += "<b>Posibles valores:</b><ul align='left'>";
         for (int z = 0; z < data.attribute(data.numAttributes()-1).numValues(); z++) {
-            descripcion += "<b>" + data.attribute(data.numAttributes()-1).value(z) + "</b>";
+            descripcion += "<li>"+data.attribute(data.numAttributes()-1).value(z)+"</li>";
         }
-        return descripcion;
+        return descripcion+"</ul>";
     }
     
     /**
