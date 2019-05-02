@@ -13,7 +13,7 @@ import javax.ws.rs.core.Application;
  * Clase que configura la aplicacion para el uso de servicios
  * @author Kevin Zapata & Carlos Martinez
  */
-@javax.ws.rs.ApplicationPath("services")
+@javax.ws.rs.ApplicationPath("servicios")
 public class ApplicationConfig extends Application {
 
     @Override
@@ -22,7 +22,7 @@ public class ApplicationConfig extends Application {
         addRestResourceClasses(resources);
         return resources;
     }
-
+    
     /**
      * Agrega los servicios a los resources
      * Do not modify addRestResourceClasses() method.
@@ -32,6 +32,7 @@ public class ApplicationConfig extends Application {
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(Servicios.ReglasAsociacionServices.class);
+        resources.add(Servicios.PruebaServices.class);
     }
     
 }
