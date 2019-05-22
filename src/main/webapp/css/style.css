@@ -9,6 +9,7 @@ section {
     width: 50%;
     margin: 0 auto;
 }
+.none{display:none}
 .formulario{
     border: 1px solid #ccc;
     background: #f9f9f9;
@@ -54,6 +55,44 @@ footer {
 }
 .lds-ring div:nth-child(3) {
   animation-delay: -0.15s;
+}
+.sep{
+    border-bottom: 1px solid #ccc;
+    margin: 20px -20px;
+}
+.exp {
+    background: #f1f2f3;
+    border: 1px solid #ccc;
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+    font-weight: bold;
+    top: 0;
+    font-size: 25px;
+    line-height: 25px;
+    padding-bottom: 10px;
+}
+.close {
+    position: absolute;
+    right: 30px;
+    top: 30px;
+    color: #424242;
+    font-size: 40px;
+    cursor: pointer;
+}
+.pr{position: relative;}
+.fixed svg{
+    width: 100%;
+    height: 100%;
+}
+.fixed{
+    position: fixed;
+    z-index: 99;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100vh;
+    background: white;
 }
 @keyframes lds-ring {
   0% {

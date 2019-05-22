@@ -27,6 +27,6 @@ public class PruebaServices {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("saludo/{nombre}")
     public String saludo(@PathParam("nombre") String nombre) {
-        return "Hola, "+nombre+" HP.";
+        return "Hola, "+nombre+".";
     }
 }

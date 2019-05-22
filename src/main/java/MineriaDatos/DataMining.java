@@ -5,11 +5,15 @@
  */
 package MineriaDatos;
 
+import Modelo.Nodo;
+import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import weka.core.Instances;
 
 /**
@@ -30,9 +34,10 @@ public class DataMining implements Serializable{
      * @param tipoAlgoritmo el tipo de algoritmo a ejecutar para el conjunto de datos
      * @return 
      */
-    public String mineria (String datos, int tipoAlgoritmo){
+    public String[] mineria (String datos, int tipoAlgoritmo) throws Exception, IOException{
         StringReader sr = new StringReader(datos);
         BufferedReader br = new BufferedReader(sr);
+        String[] rta = new String[4];
         try {
             Instances data;
             //Definimos el objeto que contiene los datos a clasificar
@@ -42,19 +47,30 @@ public class DataMining implements Serializable{
             data.setClassIndex(data.numAttributes() - 1);
             //cerramos el objeto buffer
             br.close();
-            String resultado = "";
             //Obtenemos resultados dependiendo del algoritmo
             switch (tipoAlgoritmo){
                 case 1:
-                    // Ejecuta el algoritmo de apriori
-                    resultado = raDataMining.apriori(data);
-                    break;
+                    final Gson gson = new Gson();
+                    // Ejecuta el algoritmo de apriori y guardamos el resultado en la respuesta
+                    rta[0] = encabezado(data)+"\n"+raDataMining.apriori(data);
+                    // informacion necesaria para construir el grapho en el frontend con D3.js
+                    // obtenemos las listas de nodos y links
+                    List<ArrayList> listas = raDataMining.aprioriGraphData(data);
+                    // Obtenemos los nodos
+                    List<Nodo> nodos = listas.get(0);
+                    // guardamos los nodos del grapho en la respuesta
+                    rta[1] = gson.toJson(nodos);
+                    // Guardamos los links del grapho en la respuesta
+                    rta[2] = gson.toJson(listas.get(1));
+;                    // Mandamos la tabla html de los nodos
+                    rta[3] = raDataMining.tablaNodosHTML(nodos);
+                    //break;
                 default:
             }
-            return encabezado(data)+"\n"+resultado;
         } catch (IOException ex) {
-            return "El error es: " + ex.getMessage();
+            rta[0] = "Ha ocurrido un error!:\n"+ex.getMessage();
         }
+        return rta;
     }
     
     /**

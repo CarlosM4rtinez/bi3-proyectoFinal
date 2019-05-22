@@ -7,6 +7,7 @@ package Servicios;
 
 
 import MineriaDatos.DataMining;
+import com.google.gson.Gson;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 import java.io.BufferedReader;
@@ -23,8 +24,8 @@ import javax.ws.rs.core.MediaType;
  * Clase encargada de los servicios de reglas de asociacion
  * @author Kevin Zapata & Carlos Martinez
  */
-@Path("reglas-asociacion")
-public class ReglasAsociacionServices extends Application{
+@Path("mineria")
+public class DataMiningServices extends Application{
     
     private DataMining dataMining = new DataMining();
 
@@ -42,10 +43,13 @@ public class ReglasAsociacionServices extends Application{
     @Produces(MediaType.APPLICATION_JSON)
     public String consumir(@FormDataParam("algoritmo") String algoritmo, @FormDataParam("file") InputStream file, @FormDataParam("file") FormDataContentDisposition fileDetail){
         try {
+            final Gson gson = new Gson();
             // Pasamos a analizar el archivo usando la mineria de datos.
-            return dataMining.mineria(dataMining.convertir(new BufferedReader(new InputStreamReader(file))), Integer.parseInt(algoritmo));
+            return gson.toJson(dataMining.mineria(dataMining.convertir(new BufferedReader(new InputStreamReader(file))), Integer.parseInt(algoritmo)));
         }catch (IOException io) {
-            return "Ups! ha ocurrido un error: "+io.getMessage();
+            return "<div class='alert alert-danger'><b>Ups! ha ocurrido un error:</b><br>"+io.getMessage()+"</div>";
+        }catch (Exception e){
+            return "<div class='alert alert-danger'><b>Ups! ha ocurrido un error:</b><br>"+e.getMessage()+"</div>";
         }
     }
     /**
@@ -63,7 +67,7 @@ public class ReglasAsociacionServices extends Application{
             // Obtenemos la informacion del archivo
             return dataMining.convertir(new BufferedReader(new InputStreamReader(file)));
         }catch (IOException io) {
-            return "Ups! ha ocurrido un error: "+io.getMessage();
+            return "<div class='alert alert-danger'><b>Ups! ha ocurrido un error:</b><br>"+io.getMessage()+"</div>";
         }
     }
 
