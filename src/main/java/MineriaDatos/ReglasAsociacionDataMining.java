@@ -34,17 +34,46 @@ public class ReglasAsociacionDataMining implements Serializable{
         a.buildAssociations(data);
         //Se cargan los resultados de la asociacion apriori
         String rta = "<b><center>Resultados de asociacion Apriori</center></b>"
-                + "========<br>"
-                + "El modelo de asociacion generado indica los siguientes resultados"
-                + "<br>===========<br><ol>";
+                   + "========<br>"
+                   + "El modelo de asociacion generado indica los siguientes resultados"
+                   + "<br>===========<br><ol>";
         //Obtenemos resultados
         for (int i = 0; i < a.getAssociationRules().getRules().size(); i++) {
-            rta = rta+"<li align='left'>Si <b>"+a.getAssociationRules().getRules().get(i).getPremise().toString()
-                     +"</b><br>Entonces <b>"+a.getAssociationRules().getRules().get(i).getConsequence().toString()
-                     + "</b> con un <font color='green'><b>"+(int)(a.getAssociationRules().getRules().get(i).getPrimaryMetricValue() * 100)
-                     +"%</b></font> de posibilidad.<br><br></li>";
+            rta += "<li align='left'>Si ";
+            // Sacamos los valores del si para construir los nodos
+            Collection<Item> premises = a.getAssociationRules().getRules().get(i).getPremise();
+            for(Item item: premises){
+                rta += "<b>"+this.replaceAttribute(item.getAttribute().name())+" "+this.replaceCompara(item.getComparisonAsString())+" "+item.getItemValueAsString()+"</b>";
+                rta += " y ";
+            }
+            rta = rta.substring(0, rta.length()-3); // Eliminamos el ultimo " y " de la cadena
+            rta += "</b><br>Entonces <b>";
+            // Sacamos los valores del Entonces para construir los nodos
+            Collection<Item> consequences = a.getAssociationRules().getRules().get(i).getConsequence();
+            for(Item item: consequences){
+                rta += this.replaceAttribute(item.getAttribute().name())+" "+this.replaceCompara(item.getComparisonAsString())+" "+item.getItemValueAsString();
+            }
+            rta += "</b> con un <font color='green'><b>"+(int)(a.getAssociationRules().getRules().get(i).getPrimaryMetricValue() * 100)
+                +  "%</b></font> de posibilidad.<br><br></li>";
         }
         return rta+"</ol>";
+    }
+    
+    /**
+     * Remplaza caracteres del nombre del atributo
+     * @param a el atributo a remplazarle los atributos
+     * @return el atributo limpio sin caracteres conectado las palabras
+     */
+    public String replaceAttribute(String a){
+        return a.replaceAll("-", " "); // Eliminamos los guiones del atributo
+    }
+    /**
+     * Remplaza los caracteres de = y otros para mejorar la interpretacion de las reglas de asociacion
+     * @param c la cadena de comparacion 
+     * @return la cadena de compracion con datos mas entendibles
+     */
+    public String replaceCompara(String c){
+        return c.replaceAll("=", "es"); // Remplazamos "=" por "es" para mayor interpretacion
     }
     
     /**
@@ -73,8 +102,8 @@ public class ReglasAsociacionDataMining implements Serializable{
             int sec = 1;            
             for(Item item: premises){
                 Nodo nodo = new Nodo();
-                nodo.setAtributo(item.getAttribute().name().replaceAll("-", " "));
-                nodo.setCompara(item.getComparisonAsString());
+                nodo.setAtributo(this.replaceAttribute(item.getAttribute().name()));
+                nodo.setCompara(this.replaceCompara(item.getComparisonAsString()));
                 nodo.setValor(item.getItemValueAsString());
                 // Validamos si ya existe nodo
                 Nodo n = this.buscarNodo(nodo, nodes);
@@ -106,8 +135,8 @@ public class ReglasAsociacionDataMining implements Serializable{
             sec = 1;
             for(Item item: consequences){
                Nodo nodo = new Nodo();
-                nodo.setAtributo(item.getAttribute().name().replaceAll("-", " ")); // Eliminamos el guion del nombre
-                nodo.setCompara(item.getComparisonAsString());
+                nodo.setAtributo(this.replaceAttribute(item.getAttribute().name()));
+                nodo.setCompara(this.replaceCompara(item.getComparisonAsString()));
                 nodo.setValor(item.getItemValueAsString());
                 // Validamos si ya existe nodo
                 Nodo n = this.buscarNodo(nodo, nodes);
