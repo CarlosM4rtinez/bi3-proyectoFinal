@@ -122,7 +122,6 @@ function tick() {
 function restart() {
     // path (link) group
     path = path.data(links);
-
     // update existing links
     path.classed('selected', (d) => d === selectedLink)
             .style('marker-start', (d) => d.left ? 'url(#start-arrow)' : '')
@@ -133,7 +132,6 @@ function restart() {
             });
     // remove old links
     path.exit().remove();
-
     // add new links
     path = path.enter().append('svg:path')
             .attr('class', 'link')
@@ -142,35 +140,26 @@ function restart() {
             .style('marker-end', (d) => d.right ? 'url(#end-arrow)' : '')
             .on("mousemove", (d) => {
                 mouseMoving();
-            })
-            .on("mouseout", (d) => {
+            }).on("mouseout", (d) => {
                 mouseoutHandler();
-            })
-            .on('mouseover', (d) => {
-//      if (d3.event.ctrlKey) return;
-//      // select link
-//      mousedownLink = d;
-//      selectedLink = (mousedownLink === selectedLink) ? null : mousedownLink;
-//      selectedNode = null;
-//      restart();
+            }).on('mouseover', (d) => {
+                //      if (d3.event.ctrlKey) return;
+                //      // select link
+                //      mousedownLink = d;
+                //      selectedLink = (mousedownLink === selectedLink) ? null : mousedownLink;
+                //      selectedNode = null;
+                //      restart();
                 mouseoverHandler(d);
-            })
-            .merge(path);
-
-
-
+            }).merge(path);
     // circle (node) group
     // NB: the function arg is crucial here! nodes are known by id, not by index!
     circle = circle.data(nodes, (d) => d.id);
-
     // update existing nodes (reflexive & selected visual states)
     circle.selectAll('circle')
             .style('fill', (d) => (d === selectedNode) ? d3.rgb(colors(d.id)).brighter().toString() : colors(d.id))
             .classed('reflexive', (d) => d.reflexive);
-
     // remove old nodes
     circle.exit().remove();
-
     // add new nodes
     const g = circle.enter().append('svg:g');
     // AQUIIIIIIIII aplicar evento tooltip OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
@@ -204,60 +193,61 @@ function restart() {
                 mousedownNode = d;
                 selectedNode = (mousedownNode === selectedNode) ? null : mousedownNode;
                 selectedLink = null;
-//      // reposition drag line
-//      dragLine
-//        .style('marker-end', 'url(#end-arrow)')
-//        .classed('hidden', false)
-//        .attr('d', `M${mousedownNode.x},${mousedownNode.y}L${mousedownNode.x},${mousedownNode.y}`);
-
+                //      // reposition drag line
+                //      dragLine
+                //        .style('marker-end', 'url(#end-arrow)')
+                //        .classed('hidden', false)
+                //        .attr('d', `M${mousedownNode.x},${mousedownNode.y}L${mousedownNode.x},${mousedownNode.y}`);
                 restart();
             })
             .on('mouseup', function (d) {
-//      if (!mousedownNode) return;
-//
-//      // needed by FF
-//      dragLine
-//        .classed('hidden', true)
-//        .style('marker-end', '');
-//
-//      // check for drag-to-self
-//      mouseupNode = d;
-//      if (mouseupNode === mousedownNode) {
-//        resetMouseVars();
-//        return;
-//      }
-//
-//      // unenlarge target node
-//      d3.select(this).attr('transform', '');
-//
-//      // add link to graph (update if exists)
-//      // NB: links are strictly source < target; arrows separately specified by booleans
-//      const isRight = mousedownNode.id < mouseupNode.id;
-//      const source = isRight ? mousedownNode : mouseupNode;
-//      const target = isRight ? mouseupNode : mousedownNode;
-//
-//      const link = links.filter((l) => l.source === source && l.target === target)[0];
-//      if (link) {
-//        link[isRight ? 'right' : 'left'] = true;
-//      } else {
-//        links.push({ source, target, left: !isRight, right: isRight });
-//      }
-//
-//      // select new link
-//      selectedLink = link;
-//      selectedNode = null;
-//      restart();
+                //      if (!mousedownNode) return;
+                //
+                //      // needed by FF
+                //      dragLine
+                //        .classed('hidden', true)
+                //        .style('marker-end', '');
+                //
+                //      // check for drag-to-self
+                //      mouseupNode = d;
+                //      if (mouseupNode === mousedownNode) {
+                //        resetMouseVars();
+                //        return;
+                //      }
+                //
+                //      // unenlarge target node
+                //      d3.select(this).attr('transform', '');
+                //
+                //      // add link to graph (update if exists)
+                //      // NB: links are strictly source < target; arrows separately specified by booleans
+                //      const isRight = mousedownNode.id < mouseupNode.id;
+                //      const source = isRight ? mousedownNode : mouseupNode;
+                //      const target = isRight ? mouseupNode : mousedownNode;
+                //
+                //      const link = links.filter((l) => l.source === source && l.target === target)[0];
+                //      if (link) {
+                //        link[isRight ? 'right' : 'left'] = true;
+                //      } else {
+                //        links.push({ source, target, left: !isRight, right: isRight });
+                //      }
+                //
+                //      // select new link
+                //      selectedLink = link;
+                //      selectedNode = null;
+                //      restart();
             });
-
     // show node IDs NOMBRE DE LOS NODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOS
     g.append('svg:text')
             .attr('x', 0)
             .attr('y', 27) // valor inicial en 4
             .attr('class', 'id')
-            .text((d) => d.name); // Coloca el nombre del nodo
-
+            .text((d) => (d.name).split(":")[1]); // Coloca la regla del nodo
+    g.append('svg:text')
+            .attr('x', -5)
+            .attr('y', 4) // valor inicial en 4
+            .attr('class', 'idnodo')
+            .text((d) => (d.name).split(":")[0]); // Coloca el numero de la regla
     circle = g.merge(circle);
-
     // set the graph in motion
     force
             .nodes(nodes)

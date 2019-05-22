@@ -109,7 +109,7 @@ public class ReglasAsociacionDataMining implements Serializable{
                 Nodo n = this.buscarNodo(nodo, nodes);
                 //if(n == null){
                     nodo.setId(nodes.size());
-                    nodo.setName("R"+i+": Si-"+sec);
+                    nodo.setName("R"+(i+1)+":"+sec+". Si "+nodo.getAtributo()+" "+nodo.getCompara()+" "+nodo.getValor());
                     // Guardamos el nodo en la lista de nodes
                     nodes.add(nodo);
                 //}
@@ -131,8 +131,6 @@ public class ReglasAsociacionDataMining implements Serializable{
             }
             // Sacamos los valores del Entonces para construir los nodos
             Collection<Item> consequences = a.getAssociationRules().getRules().get(i).getConsequence();
-            // Reiniciamos la secuencia
-            sec = 1;
             for(Item item: consequences){
                Nodo nodo = new Nodo();
                 nodo.setAtributo(this.replaceAttribute(item.getAttribute().name()));
@@ -142,7 +140,7 @@ public class ReglasAsociacionDataMining implements Serializable{
                 Nodo n = this.buscarNodo(nodo, nodes);
                 //if(n == null){
                     nodo.setId(nodes.size());
-                    nodo.setName("R"+i+": Entonces-"+sec);
+                    nodo.setName("R"+(i+1)+":"+sec+". Entonces "+nodo.getAtributo()+" "+nodo.getCompara()+" "+nodo.getValor()+", "+(+(int)(a.getAssociationRules().getRules().get(i).getPrimaryMetricValue() * 100)+"%."));
                     // Guardamos el nodo en la lista de nodes
                     nodes.add(nodo);
                 //}

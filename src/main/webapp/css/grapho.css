@@ -79,11 +79,17 @@ circle.node.reflexive {
 }
 
 text {
-  font: 12px sans-serif;
-  pointer-events: none;
+    font: 10px sans-serif;
+    pointer-events: none;
 }
 
 text.id {
   text-anchor: middle;
   font-weight: bold;
+  text-shadow: 1px 1px 1px white;
+}
+text.idnodo {
+    fill: #ffffff80;
+    font-weight: bold;
+    font-size: 8px;
 }
