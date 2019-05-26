@@ -12,7 +12,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import weka.associations.Apriori;
+import weka.associations.FPGrowth;
 import weka.associations.Item;
+import weka.associations.Tertius;
+import weka.associations.tertius.Rule;
+import weka.associations.tertius.SimpleLinkedList;
 import weka.core.Instances;
 
 /**
@@ -210,6 +214,69 @@ public class ReglasAsociacionDataMining implements Serializable{
                         "  </tbody>\n" +
                         "</table>";
         return tabla;
+    }
+    
+    public String FPGrowth (Instances data){
+    
+        try {
+
+           //Creamos el objeto de asociacion por FPGrwoth
+            FPGrowth a = new FPGrowth();
+            //Se rebajan el numero de reglas ya que por defecto son 100
+            //Se sacan las 10 MEJORES reglas que haya encontrado el modelo
+          //  a.setNumRules(10);
+            //Creamos el descriptivo apriori con los datos
+            a.buildAssociations(data);
+            //Se cargan los resultados de la asociacion apriori
+            String rta = "<b><center>Resultados de asociacion FPGrowth</center></b>"
+                    + "========<br>"
+                    + "El modelo de FPGrowth generado indica los siguientes resultados"
+                    + "<br>===========<br><ol>";
+             
+             //Obtenemos resultados;
+              for (int i = 0; i < a.getAssociationRules().getRules().size(); i++) {
+                rta = rta+"<li align='left'>Si <b>"+a.getAssociationRules().getRules().get(i).getPremise().toString()
+                         +"</b><br>Entonces <b>"+a.getAssociationRules().getRules().get(i).getConsequence().toString()
+                         + "</b> con un <font color='green'><b>"+(int)(a.getAssociationRules().getRules().get(i).getPrimaryMetricValue() * 100)
+                         +"%</b></font> de posibilidad.<br><br></li>";
+            }
+              return rta+"</ol>";
+              
+        } catch (Exception ex) {
+            return "El error es: " + ex.getMessage();
+        }
+    
+    }
+    
+    public String Tertius (Instances data){
+    
+        try {
+            //Creamos el objeto de asociacion por FPGrwoth
+            Tertius a = new Tertius();
+            //Creamos el descriptivo apriori con los datos
+            a.buildAssociations(data);
+            //Se cargan los resultados de la asociacion apriori
+            String rta = "<b><center>Resultados de asociacion Tertius</center></b>"
+                    + "========<br>"
+                    + "El modelo de Tertius generado indica los siguientes resultados"
+                    + "<br>===========<br><ol>";
+            //Obtenemos resultados
+            SimpleLinkedList.LinkedListIterator resultados = a.getResults().iterator();
+            while(resultados.hasNext()){
+                String[] datos = ((Rule) resultados.next()).toString().split(" ==> ");
+                rta += "<b>"+datos[1]+" </b><br>";
+            }
+
+            
+//                rta = rta+"<li align='left'><b>"+resultados+"<br>"
+//                    + " .<br><br></li>";
+                
+             return rta+"</ol>";
+             
+        } catch (Exception ex) {
+            return "El error es: " + ex.getMessage();
+        }
+    
     }
     
 }
