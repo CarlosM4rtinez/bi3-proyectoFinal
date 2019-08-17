@@ -45,7 +45,7 @@ public class DataMiningServices extends Application{
         try {
             final Gson gson = new Gson();
             // Pasamos a analizar el archivo usando la mineria de datos.
-            return gson.toJson(dataMining.mineria(dataMining.convertir(new BufferedReader(new InputStreamReader(file))), Integer.parseInt(algoritmo)));
+            return gson.toJson(dataMining.mineria(dataMining.convertir(new BufferedReader(new InputStreamReader(file))), Integer.parseInt(algoritmo), 1));
         }catch (IOException io) {
             return "<div class='alert alert-danger'><b>Ups! ha ocurrido un error:</b><br>"+io.getMessage()+"</div>";
         }catch (Exception e){

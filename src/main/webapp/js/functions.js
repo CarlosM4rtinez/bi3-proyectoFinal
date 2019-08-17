@@ -28,6 +28,8 @@ $(document).ready(function(){
                 // Pasamos los links del grapho
                 var enlaces = data[2].replace(/"nodes/g, "nodes");
                 enlaces = enlaces.replace(/]"/g, ']');
+                console.log(data[1]);
+                console.log(data[2]);
                 links = eval(enlaces);
                 // Iniciamos el grapho
                 restart();
