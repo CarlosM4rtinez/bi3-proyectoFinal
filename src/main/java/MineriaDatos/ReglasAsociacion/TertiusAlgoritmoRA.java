@@ -5,6 +5,7 @@
  */
 package MineriaDatos.ReglasAsociacion;
 
+import Modelo.AjustesRA;
 import Modelo.Link;
 import Modelo.Nodo;
 import java.io.Serializable;
@@ -13,7 +14,6 @@ import java.util.List;
 import weka.associations.Tertius;
 import weka.associations.tertius.Rule;
 import weka.associations.tertius.SimpleLinkedList;
-import weka.core.Instances;
 
 /**
  * Algoritmo de Mineria de datos Tertius de reglas de asociacion
@@ -29,14 +29,15 @@ public class TertiusAlgoritmoRA implements Serializable{
     
     /**
      * Ejecuta el algoritmo de tertius
-     * @param data instancias necesarias para el proceso
+     * @param ajustes contiene los datos necesarios para la ejecucion del algoritmo
      * @return resultado de las reglas de asociacion
      */
-    public String Tertius (Instances data) throws Exception{
+    public String Tertius (AjustesRA ajustes) throws Exception{
         //Creamos el objeto de asociacion por FPGrwoth
         Tertius a = new Tertius();
+        a.setNumberLiterals(ajustes.getNumeroReglas()); // Asignamos el numero de reglas
         //Creamos el descriptivo apriori con los datos
-        a.buildAssociations(data);
+        a.buildAssociations(ajustes.getData());
         //Se cargan los resultados de la asociacion apriori
         String rta = "<b><center>Resultados de asociacion Tertius</center></b>"
                 + "========<br>"
@@ -52,17 +53,18 @@ public class TertiusAlgoritmoRA implements Serializable{
     }
     /**
      * Convierte los resultados de las reglas de asociacion en json formato D3.js
-     * @param data las instancias del archivo
+     * @param ajustes contiene los datos necesarios para la ejecucion del algoritmo
      * @return lista para ser pasada a formato json
      * @throws java.lang.Exception
      */
-    public List<ArrayList> tertiusGraphData(Instances data) throws Exception{
+    public List<ArrayList> tertiusGraphData(AjustesRA ajustes) throws Exception{
         // La lista con las listas de nodos y links a retornar
         List<ArrayList> listas = new ArrayList<>();
         //Creamos el objeto de asociacion por FPGrwoth
         Tertius a = new Tertius();
+        a.setNumberLiterals(ajustes.getNumeroReglas()); // Asignamos el numero de reglas
         //Creamos el descriptivo apriori con los datos
-        a.buildAssociations(data);
+        a.buildAssociations(ajustes.getData());
         // Lista de nodos
         List<Nodo> nodes = new ArrayList<>();
         // Lista de enlaces de los nodos

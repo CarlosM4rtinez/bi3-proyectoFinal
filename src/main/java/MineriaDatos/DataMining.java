@@ -6,6 +6,7 @@
 package MineriaDatos;
 
 import MineriaDatos.ReglasAsociacion.ReglasAsociacion;
+import Modelo.AjustesRA;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Serializable;
@@ -27,24 +28,25 @@ public class DataMining implements Serializable{
     
     /**
      * Aplica la mineria de datos para el algoritmo especifico
-     * @param datos conjunto de datos a analizar
-     * @param tipoAlgoritmo el tipo de algoritmo a ejecutar para el conjunto de datos
+     * @param ajustes contiene todos los ajustes para la aplicacion del algoritmo
      * @param tipoClasificacion el tipo de clasificacion de algoritmos a usar
      * @return resultados del proceso de analisis
      */
-    public String[] mineria (String datos, int tipoAlgoritmo, int tipoClasificacion) throws Exception, IOException{
-        StringReader sr = new StringReader(datos);
+    public String[] mineria (AjustesRA ajustes, int tipoClasificacion) throws Exception, IOException{
+        StringReader sr = new StringReader(ajustes.getDatosArchivo());
         BufferedReader br = new BufferedReader(sr);
         Instances data;
         //Definimos el objeto que contiene los datos a clasificar
         data = new Instances(br);
         //cerramos el objeto buffer
         br.close();
+        // Asignamos el data a los ajustes
+        ajustes.setData(data);
         // Deinimos que clasificacion de algoritmos ejecutar
         switch (tipoClasificacion){
             case 1:
                 // Algoritmos de Reglas de Asociacion
-                return this.raDataMining.aplicar(data, tipoAlgoritmo);
+                return this.raDataMining.aplicar(ajustes);
             case 2:
                 // Algoritmos de Arboles de Decision
             case 3:
@@ -63,7 +65,7 @@ public class DataMining implements Serializable{
         String descripcion ="<b>Atributo clase:</b> "+data.attribute(data.numAttributes()-1).name()+"<br>";
         //Si el tipo es igual a 2 (FTGrowth)
         if(tipo==2){
-            descripcion= "<b>Este metodo no recibe atributos de tipo Â´Â´ClaseÂ´Â´</b><ul align='left'>";
+            descripcion= "<b>Este metodo no recibe atributos de tipo Clase</b><ul align='left'>";
         }
         descripcion += "<b>Posibles valores:</b><ul align='left'>";
         for (int z = 0; z < data.attribute(data.numAttributes()-1).numValues(); z++) {

@@ -5,6 +5,7 @@
  */
 package MineriaDatos.ReglasAsociacion;
 
+import Modelo.AjustesRA;
 import Modelo.Link;
 import Modelo.Nodo;
 import java.io.Serializable;
@@ -13,7 +14,6 @@ import java.util.Collection;
 import java.util.List;
 import weka.associations.Apriori;
 import weka.associations.Item;
-import weka.core.Instances;
 
 /**
  * Algoritmo de Mineria de datos apriori de reglas de asociacion
@@ -29,14 +29,16 @@ public class AprioriAlgoritmoRA implements Serializable{
 
   /**
    * Metodo de Reglas de Asociacion: clasificacion Apriori
-   * @param data conjunto de instancias con los datos
+   * @param ajustes contiene los datos necesarios para la aplicacion del algoritmo
    * @return el resultado del analisis del algoritmo de apriori
    */  
-    public String apriori (Instances data) throws Exception{
+    public String apriori (AjustesRA ajustes) throws Exception{
         //Creamos el objeto de asociacion por apriori
         Apriori a = new Apriori();
+        a.setNumRules(ajustes.getNumeroReglas()); // Asignamos el numero de reglas
+        a.setMinMetric(ajustes.getPorcentajeAceptacion()); // Asignamos el % minimo de aceptacion
         //Creamos el descriptivo apriori con los datos
-        a.buildAssociations(data);
+        a.buildAssociations(ajustes.getData());
         //Se cargan los resultados de la asociacion apriori
         String rta = "<b><center>Resultados de asociacion Apriori</center></b>"
                    + "========<br>"
@@ -65,17 +67,19 @@ public class AprioriAlgoritmoRA implements Serializable{
     }
     /**
      * Convierte los resultados de las reglas de asociacion en json formato D3.js
-     * @param data las instancias del archivo
+     * @param ajustes contiene los datos necesarios para la ejecucion del algoritmo
      * @return lista para ser pasada a formato json
      * @throws java.lang.Exception
      */
-    public List<ArrayList> aprioriGraphData(Instances data) throws Exception{
+    public List<ArrayList> aprioriGraphData(AjustesRA ajustes) throws Exception{
         // La lista con las listas de nodos y links a retornar
         List<ArrayList> listas = new ArrayList<>();
          //Creamos el objeto de asociacion por apriori
          Apriori a = new Apriori();
+        a.setNumRules(ajustes.getNumeroReglas()); // Asignamos el numero de reglas
+        a.setMinMetric(ajustes.getPorcentajeAceptacion()); // Asignamos el % minimo de aceptacion
         //Creamos el descriptivo apriori con los datos
-        a.buildAssociations(data);
+        a.buildAssociations(ajustes.getData());
         // Lista de nodos
         List<Nodo> nodes = new ArrayList<>();
         // Lista de enlaces de los nodos

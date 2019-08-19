@@ -5,6 +5,7 @@
  */
 package MineriaDatos.ReglasAsociacion;
 
+import Modelo.AjustesRA;
 import Modelo.Link;
 import Modelo.Nodo;
 import java.io.Serializable;
@@ -13,7 +14,6 @@ import java.util.Collection;
 import java.util.List;
 import weka.associations.FPGrowth;
 import weka.associations.Item;
-import weka.core.Instances;
 
 /**
  * Algoritmo de Mineria de datos FPGrowth de reglas de asociacion
@@ -29,18 +29,17 @@ public class FPGrowthAlgoritmoRA implements Serializable{
 
     /**
      * Ejecuta el algoritmo
-     * @param data instancias necesarias para la ejecucion del algoritmo
+     * @param ajustes contiene los datos necesarios para la ejecucion del algoritmo
      * @return string con los resultados
      * @throws Exception 
      */
-    public String FPGrowth (Instances data) throws Exception{
+    public String FPGrowth (AjustesRA ajustes) throws Exception{
         //Creamos el objeto de asociacion por FPGrwoth
         FPGrowth a = new FPGrowth();
-        //Se rebajan el numero de reglas ya que por defecto son 100
-        //Se sacan las 10 MEJORES reglas que haya encontrado el modelo
-        //  a.setNumRules(10);
+        a.setNumRulesToFind(ajustes.getNumeroReglas()); // Asignamos el numero de reglas
+        a.setMinMetric(ajustes.getPorcentajeAceptacion()); // Asignamos el % minimo de aceptacion
         //Creamos el descriptivo apriori con los datos
-        a.buildAssociations(data);
+        a.buildAssociations(ajustes.getData());
         //Se cargan los resultados de la asociacion apriori
         String rta = "<b><center>Resultados de asociacion FPGrowth</center></b>"
             + "========<br>"
@@ -70,17 +69,19 @@ public class FPGrowthAlgoritmoRA implements Serializable{
     
      /**
      * Convierte los resultados de las reglas de asociacion en json formato D3.js
-     * @param data las instancias del archivo
+     * @param ajustes contiene los datos necesarios para la ejecucion del algoritmo
      * @return lista para ser pasada a formato json
      * @throws java.lang.Exception
      */
-    public List<ArrayList> FPGrowthGraphData(Instances data) throws Exception{
+    public List<ArrayList> FPGrowthGraphData(AjustesRA ajustes) throws Exception{
         // La lista con las listas de nodos y links a retornar
         List<ArrayList> listas = new ArrayList<>();
          //Creamos el objeto de asociacion por apriori
-         FPGrowth a = new FPGrowth();
+        FPGrowth a = new FPGrowth();
+        a.setNumRulesToFind(ajustes.getNumeroReglas()); // Asignamos el numero de reglas
+        a.setMinMetric(ajustes.getPorcentajeAceptacion()); // Asignamos el % minimo de aceptacion
         //Creamos el descriptivo apriori con los datos
-        a.buildAssociations(data);
+        a.buildAssociations(ajustes.getData());
         // Lista de nodos
         List<Nodo> nodes = new ArrayList<>();
         // Lista de enlaces de los nodos

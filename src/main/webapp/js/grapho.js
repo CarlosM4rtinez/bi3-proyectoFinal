@@ -1,14 +1,8 @@
 // set up SVG for D3
-const width = $("#rta").width(); // definimos el ancho del svg de acuerdo al ancho del div de respuesta
-const height = 400;
-const colors = d3.scaleOrdinal(d3.schemeCategory10);
-
-const svg = d3.select('#graph')
-  .append('svg')
-  .on('contextmenu', () => { d3.event.preventDefault(); })
-  .attr('width', width)
-  .attr('height', height);
-
+var width; 
+var height;
+var colors;
+var svg;
 // Nuevo codigo
 var tooltip = d3.select('body').append('div') .attr("class","tooltip").attr("id","tooltip")
       .style({
@@ -17,7 +11,6 @@ var tooltip = d3.select('body').append('div') .attr("class","tooltip").attr("id"
         'width':"90px",
         });
 // END NUEVO CODIGO
-
 // set up initial nodes and links
 //  - nodes are known by 'id', not by index in array.
 //  - reflexive edges are indicated on the node (as a bold black circle).
@@ -25,73 +18,90 @@ var tooltip = d3.select('body').append('div') .attr("class","tooltip").attr("id"
 var nodes = [];
 let lastNodeId = 2;
 var links = [];
-
 // init D3 force layout
-const force = d3.forceSimulation()
-  .force('link', d3.forceLink().id((d) => d.id).distance(150))
-  .force('charge', d3.forceManyBody().strength(-500))
-  .force('x', d3.forceX(width / 2))
-  .force('y', d3.forceY(height / 2))
-  .on('tick', tick);
-
+var force;
 // init D3 drag support
-const drag = d3.drag()
-  // Mac Firefox doesn't distinguish between left/right click when Ctrl is held... 
-  .filter(() => d3.event.button === 0 || d3.event.button === 2)
-  .on('start', (d) => {
-    if (!d3.event.active) force.alphaTarget(0.3).restart();
-
-    d.fx = d.x;
-    d.fy = d.y;
-  })
-  .on('drag', (d) => {
-    d.fx = d3.event.x;
-    d.fy = d3.event.y;
-  })
-  .on('end', (d) => {
-    if (!d3.event.active) force.alphaTarget(0);
-
-    d.fx = null;
-    d.fy = null;
-  });
-
-// define arrow markers for graph links
-svg.append('svg:defs').append('svg:marker')
-    .attr('id', 'end-arrow')
-    .attr('viewBox', '0 -5 10 10')
-    .attr('refX', 6)
-    .attr('markerWidth', 3)
-    .attr('markerHeight', 3)
-    .attr('orient', 'auto')
-  .append('svg:path')
-    .attr('d', 'M0,-5L10,0L0,5')
-    .attr('fill', '#000');
-
-svg.append('svg:defs').append('svg:marker')
-    .attr('id', 'start-arrow')
-    .attr('viewBox', '0 -5 10 10')
-    .attr('refX', 4)
-    .attr('markerWidth', 3)
-    .attr('markerHeight', 3)
-    .attr('orient', 'auto')
-  .append('svg:path')
-    .attr('d', 'M10,-5L0,0L10,5')
-    .attr('fill', '#000');
+var drag;
 // line displayed when dragging new nodes
-const dragLine = svg.append('svg:path')
-  .attr('class', 'link dragline hidden')
-  .attr('d', 'M0,0L0,0');
-
+var dragLine;
 // handles to link and node element groups
-let path = svg.append('svg:g').selectAll('path');
-let circle = svg.append('svg:g').selectAll('g');
-
+let path,circle;
 // mouse event vars
 let selectedNode = null;
 let selectedLink = null;
 let mousedownLink = null;
 let mousedownNode = null;
 let mouseupNode = null;
+
+function iniciarVariables(w,h,id){
+    // set up SVG for D3
+    width = w;
+    height = h;
+    colors = d3.scaleOrdinal(d3.schemeCategory10);
+    svg = d3.select(id)
+      .append('svg')
+      .on('contextmenu', () => { d3.event.preventDefault(); })
+      .attr('width', width)
+      .attr('height', height);
+    force = d3.forceSimulation()
+      .force('link', d3.forceLink().id((d) => d.id).distance(150))
+      .force('charge', d3.forceManyBody().strength(-500))
+      .force('x', d3.forceX(width / 2))
+      .force('y', d3.forceY(height / 2))
+      .on('tick', tick);
+    drag = d3.drag()
+      // Mac Firefox doesn't distinguish between left/right click when Ctrl is held... 
+      .filter(() => d3.event.button === 0 || d3.event.button === 2)
+      .on('start', (d) => {
+        if (!d3.event.active) force.alphaTarget(0.3).restart();
+
+        d.fx = d.x;
+        d.fy = d.y;
+      })
+      .on('drag', (d) => {
+        d.fx = d3.event.x;
+        d.fy = d3.event.y;
+      })
+      .on('end', (d) => {
+        if (!d3.event.active) force.alphaTarget(0);
+        d.fx = null;
+        d.fy = null;
+      });
+    // define arrow markers for graph links
+    svg.append('svg:defs').append('svg:marker')
+        .attr('id', 'end-arrow')
+        .attr('viewBox', '0 -5 10 10')
+        .attr('refX', 6)
+        .attr('markerWidth', 3)
+        .attr('markerHeight', 3)
+        .attr('orient', 'auto')
+      .append('svg:path')
+        .attr('d', 'M0,-5L10,0L0,5')
+        .attr('fill', '#000');
+
+    svg.append('svg:defs').append('svg:marker')
+        .attr('id', 'start-arrow')
+        .attr('viewBox', '0 -5 10 10')
+        .attr('refX', 4)
+        .attr('markerWidth', 3)
+        .attr('markerHeight', 3)
+        .attr('orient', 'auto')
+      .append('svg:path')
+        .attr('d', 'M10,-5L0,0L10,5')
+        .attr('fill', '#000');
+    dragLine = svg.append('svg:path')
+      .attr('class', 'link dragline hidden')
+      .attr('d', 'M0,0L0,0')
+    path = svg.append('svg:g').selectAll('path');
+    circle = svg.append('svg:g').selectAll('g');
+    // app starts here
+    svg.on('mousedown', mousedown)
+            .on('mousemove', mousemove)
+            .on('mouseup', mouseup);
+    d3.select(window)
+            .on('keydown', keydown)
+            .on('keyup', keyup);
+}
 
 function resetMouseVars() {
     mousedownNode = null;
@@ -390,10 +400,3 @@ function mouseMoving() {
 function mouseoutHandler() {
     document.getElementById("tooltip").style.opacity = 0;
 }
-// app starts here
-svg.on('mousedown', mousedown)
-        .on('mousemove', mousemove)
-        .on('mouseup', mouseup);
-d3.select(window)
-        .on('keydown', keydown)
-        .on('keyup', keyup);

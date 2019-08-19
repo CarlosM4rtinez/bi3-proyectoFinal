@@ -6,6 +6,7 @@
 package MineriaDatos.ReglasAsociacion;
 
 import MineriaDatos.DataMining;
+import Modelo.AjustesRA;
 import Modelo.Nodo;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -32,26 +33,25 @@ public class ReglasAsociacion implements Serializable{
     
     /**
      * Aplica un algoritmo de regla de asociacion
-     * @param data instancias necesarias para realizar el proceso de analisis de datos
-     * @param algoritmo el algoritmo que se quiere aplicar
+     * @param ajustes contiene los ajustes necesarios para la aplicacion del algoritmo
      * @return vector con inormacion de los resultados del algoritmo
      * @throws Exception
      * @throws IOException 
      */
-    public String[] aplicar (Instances data, int algoritmo) throws Exception, IOException{
+    public String[] aplicar (AjustesRA ajustes) throws Exception, IOException{
         //Variable de retorno para definir si un algoritmo recibe atrubitos de tipo " Class"
         int tipo = 0;
         final Gson gson = new Gson(); // clase para pasar objetos a JSON
         String[] rta = new String[4];
-        switch (algoritmo){
+        switch (ajustes.getAlgoritmo()){
             case 1:
                 // Algoritmo de Apriori
                 tipo = 1;
                 // Ejecuta el algoritmo de apriori y guardamos el resultado en la respuesta
-                rta[0] = this.dm.encabezado(data,tipo)+"\n"+this.aprioriRA.apriori(data);
+                rta[0] = this.dm.encabezado(ajustes.getData(),tipo)+"\n"+this.aprioriRA.apriori(ajustes);
                 // informacion necesaria para construir el grapho en el frontend con D3.js
                 // obtenemos las listas de nodos y links
-                List<ArrayList> listas = this.aprioriRA.aprioriGraphData(data);
+                List<ArrayList> listas = this.aprioriRA.aprioriGraphData(ajustes);
                 // Obtenemos los nodos
                 List<Nodo> nodos = listas.get(0);
                 // guardamos los nodos del grapho en la respuesta
@@ -65,10 +65,10 @@ public class ReglasAsociacion implements Serializable{
                 // Algoritmo FTGrowth (NO RECIBE ATRIBUTOS DE TIPO CLASS)
                 tipo=2;
                // Ejecuta el algoritmo de FPGrowth y guardamos el resultado en la respuesta
-                rta[0] = this.dm.encabezado(data,tipo)+"\n"+this.FPGrowthRA.FPGrowth(data);
+                rta[0] = this.dm.encabezado(ajustes.getData(),tipo)+"\n"+this.FPGrowthRA.FPGrowth(ajustes);
                 // informacion necesaria para construir el grapho en el front-end con D3.js
                 // obtenemos las listas de nodos y links
-                List<ArrayList> listasFP = this.FPGrowthRA.FPGrowthGraphData(data);
+                List<ArrayList> listasFP = this.FPGrowthRA.FPGrowthGraphData(ajustes);
                 // Obtenemos los nodos
                 List<Nodo> nodosFP = listasFP.get(0);
                 // guardamos los nodos del grapho en la respuesta
@@ -82,10 +82,10 @@ public class ReglasAsociacion implements Serializable{
                 //Tipo 3 (Tertius)
                 tipo=3;
                  // Ejecuta el algoritmo de apriori y guardamos el resultado en la respuesta
-                rta[0] = this.dm.encabezado(data,tipo)+"\n"+this.tertiusRA.Tertius(data);
+                rta[0] = this.dm.encabezado(ajustes.getData(),tipo)+"\n"+this.tertiusRA.Tertius(ajustes);
                 // informacion necesaria para construir el grapho en el frontend con D3.js
                 // obtenemos las listas de nodos y links
-                List<ArrayList> listasTer = this.tertiusRA.tertiusGraphData(data);
+                List<ArrayList> listasTer = this.tertiusRA.tertiusGraphData(ajustes);
                 // Obtenemos los nodos
                 List<Nodo> nodosTer = listasTer.get(0);
                 // guardamos los nodos del grapho en la respuesta

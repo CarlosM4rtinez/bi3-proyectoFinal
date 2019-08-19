@@ -7,6 +7,7 @@ package Servicios;
 
 
 import MineriaDatos.DataMining;
+import Modelo.AjustesRA;
 import com.google.gson.Gson;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
@@ -44,8 +45,14 @@ public class DataMiningServices extends Application{
     public String consumir(@FormDataParam("algoritmo") String algoritmo, @FormDataParam("file") InputStream file, @FormDataParam("file") FormDataContentDisposition fileDetail){
         try {
             final Gson gson = new Gson();
+            // Deinimos los ajustes para la ejecucion del algoritmo
+            AjustesRA a = new AjustesRA();
+            a.setDatosArchivo(dataMining.convertir(new BufferedReader(new InputStreamReader(file))));
+            a.setAlgoritmo(Integer.parseInt(algoritmo));
+            a.setNumeroReglas(5);
+            a.setPorcentajeAceptacion(0.95); // valores de 0 a 1: ejemplo: 0.95, 0.99, 0.78
             // Pasamos a analizar el archivo usando la mineria de datos.
-            return gson.toJson(dataMining.mineria(dataMining.convertir(new BufferedReader(new InputStreamReader(file))), Integer.parseInt(algoritmo), 1));
+            return gson.toJson(dataMining.mineria(a,1));
         }catch (IOException io) {
             return "<div class='alert alert-danger'><b>Ups! ha ocurrido un error:</b><br>"+io.getMessage()+"</div>";
         }catch (Exception e){

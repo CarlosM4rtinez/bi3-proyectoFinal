@@ -28,9 +28,9 @@ $(document).ready(function(){
                 // Pasamos los links del grapho
                 var enlaces = data[2].replace(/"nodes/g, "nodes");
                 enlaces = enlaces.replace(/]"/g, ']');
-                console.log(data[1]);
-                console.log(data[2]);
                 links = eval(enlaces);
+                // Iniciamos las variables para el grapho
+                iniciarVariables($("#rta").width(),400,'#graph');
                 // Iniciamos el grapho
                 restart();
                 // Mostramos el grapho
@@ -83,15 +83,24 @@ $(document).ready(function(){
      * Expande al grapho
      */
     $("body").on("click", "#expandir", function(e){
+        // Iniciamos las variables para el grapho GRANDE
+        iniciarVariables($(window).width(),$(window).height(),'#graphBIG');
+        // Iniciamos el grapho GRANDE
+        restart();
         var boton = "<span id='close' class='close'>&#10006;</span>";
-        $("#graph").addClass("fixed");
-        $("#graph").append(boton);
+        $("#graphBIG").addClass("fixed");
+        $("#graphBIG").append(boton);
     });
     /**
      * Cerrar el expandido del grapho
      */
     $("body").on("click", "#close", function(e){
-        $("#graph").removeClass("fixed");
+        $("#graph").html("");
+        // Iniciamos las variables para el grapho
+        iniciarVariables($("#rta").width(),400,'#graph');
+        // Iniciamos el grapho
+        restart();
+        $("#graphBIG").removeClass("fixed").html("");
         $(this).remove();
     });
 });
