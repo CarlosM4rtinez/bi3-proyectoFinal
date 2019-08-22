@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Arboles de Decisión</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="icon" href="./recursos/icon.png" sizes="32x32" />
+        <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="css/arboles/style.css" rel="stylesheet" type="text/css"/>
+        <script src="js/jquery-3.4.1.min.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <div class="barraStatica">
+            <img class="iconobarra" src="Recursos/Img/tree.png">
+            <h5 class="barraStaticatexto">Arboles de decisiones</h5>
+        </div>
+
+        <section>
+            <div class="contenedor_prin" id="content">
+                <div class="encabezado">
+                    <h1>Cargar archivo</h1>        
+                    <form method="post" id="formulario" action="./servicios/servicios-Web/consumir"  enctype="multipart/form-data">
+                        <label for="inputFile">Seleccionar archivo</label>
+                        <input id="file" class="btn btn-light" data-action="./servicios/servicios-Web/informacion" type="file" name="file" accept=".csv, .arff" required/>
+                        <div class="col-md-12 row marginCombo">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <label for="inputFile">Seleccionar tipo de Arbol</label>
+                                    <select id="algoritmo" name="algoritmo" class="form-control">
+                                        <option value="1">RJ48</option>
+                                        <option value="2">RandomTree</option>
+                                        <option value="3">RepTree</option>
+                                    </select></div>
+                                <div class="col-sm-4">
+                                    <label for="inputFile">Factor de confidencia</label>
+                                    <input class="form-control" type="text" placeholder="Ingrese factor"></div>
+                                <div class="col-sm-3">                                    
+                                    <label for="inputFile">Semilla</label>                                
+                                    <input class="form-control" type="text" placeholder="Ingrese semilla">
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <br>
+                                <button id="btnform-mineria" type="submit" class="btn btn-primary btn_pos">Iniciar proceso</button>
+                            </div>
+                        </div><br>
+
+
+                    </form>    </div>            
+                <div id="rta" class="resultado"><br></div>
+                <div class="">
+                    <div id="rtaArb" style="overflow: auto"></div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <center> 
+                <div class="card colorOscurofoo">
+                    <div class="resaltotituloproyecto">
+                        <h6 class="h6Titulo"> Aplicación web de minería de datos para apoyar la toma de decisiones utilizando métodos predictivos con algoritmos de árboles de decisión</h6>                        
+                    </div>
+                    <div class="card-header">                        
+                        <p class="card-text">Desarrollado por:</p>
+                        <h5 class="card-title">Julián Camilo Henao Flórez</h5>
+                        <p>Intitucion universitaria EAM - Porgrama de Ingenieria de Software</p>
+                    </div>
+
+                </div>
+            </center>
+        </footer>
+
+    </body>
+    <script src="recursos/Framework/D3/d3.v3.min.js" type="text/javascript"></script>
+    <script src="js/arboles/arbolD3.js" type="text/javascript"></script>
+    <script src="js/arboles/functions.js" type="text/javascript"></script>
+</html>
