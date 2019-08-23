@@ -97,7 +97,7 @@ $(document).ready(function(){
                 $("#conjuntodatos").html('<div class="lds-ring"><div></div><div></div><div></div><div></div></div>');
             },
             success: function(data){
-                $("#conjuntodatos").html(data);
+                z$("#conjuntodatos").html(data);
             },
             error: function (e){
                 $("#conjuntodatos").html('<p align=left><b>Datos del archivo:</b><br><br>'+e.responseText+'</p>');

@@ -113,3 +113,8 @@ footer {
 .carousel-inner img {
     max-height: 255px!important;
 }
+.card-body div.lds-ring {
+    margin: 0 auto;
+    text-align: center;
+    display: block;
+}
