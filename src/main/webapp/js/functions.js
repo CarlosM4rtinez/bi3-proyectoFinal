@@ -29,7 +29,6 @@ $(document).ready(function(){
     $("#algoritmo"+algoritmo).addClass("active");
     // asignamos el valor al select de opciones
     $("#algoritmo").val(algoritmo);
-    
     // Consumimos los servicios por ajax de jquery
     $(document).on('submit','#form-mineria',function(e){
         // ocultamos el conjunto de datos
@@ -48,7 +47,7 @@ $(document).ready(function(){
             beforeSend: function(data){
                 // Deshabilitamos el boton submit
                 $("#btnform-mineria").prop("disabled", true);
-                $("#rta").html('<div class="lds-ring"><div></div><div></div><div></div><div></div></div>');
+                $("#graph,#tabledata,#resumendata").html('<div class="lds-ring"><div></div><div></div><div></div><div></div></div>');
             },
             success: function(data){
                 // pasamos los nodos del grapho
@@ -81,7 +80,6 @@ $(document).ready(function(){
         });
         e.preventDefault();
     });
-    
     // Obtenemos la informacion del archivo seleccionado y la mostramos
     $(document).on('change','#file',function(e){
         jQuery.ajax({
@@ -139,6 +137,5 @@ $(document).ready(function(){
         $("#algoritmo"+algoritmo).addClass("active");
     });
 });
-
 
 

@@ -10,12 +10,14 @@
     width: 100%;
     display: block;
 }
+.freverse{flex-flow: row-reverse!important;    align-items: flex-end!important;}
 .resultado {
     border: 1px solid #ccc;
     background: white;
     padding: 20px;
     border-radius: 0 0 3px 3px;
 }
+#rtaArb{overflow: auto;}
 footer {
     margin: 10px auto;
     text-align: center;

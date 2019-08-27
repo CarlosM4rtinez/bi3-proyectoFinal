@@ -80,7 +80,8 @@ public class ArbolesDecisionMineria implements Serializable {
 
             String resPu = transformacionJ48JSON(arbol,1);
 
-            listaRetorno.add(this.dataMining.encabezado(data) + "\n" + resBay + "<span class='text-success'><br>Objeto JSON:</span><br>" + resPu);
+            //listaRetorno.add(this.dataMining.encabezado(data) + "\n" + resBay + "<span class='text-success'><br>Objeto JSON:</span><br>" + resPu);
+            listaRetorno.add(this.dataMining.encabezado(data) + resBay);
             listaRetorno.add(resPu);
 
             return gson.toJson(listaRetorno);
