@@ -71,10 +71,16 @@ public class DataMiningServices extends Application{
     @Produces(MediaType.APPLICATION_JSON)
     public String getInformacion(@FormDataParam("file") InputStream file, @FormDataParam("file") FormDataContentDisposition fileDetail){
         try {
-            // Obtenemos la informacion del archivo
-            return dataMining.convertir(new BufferedReader(new InputStreamReader(file)));
+            if(fileDetail.getFileName().toLowerCase().contains(".arff") || fileDetail.getFileName().toLowerCase().contains(".csv") ){
+                // Obtenemos la informacion del archivo
+                return dataMining.convertir(new BufferedReader(new InputStreamReader(file)));
+            }else{
+                return "<div class='alert alert-danger'><b>Ups! ha ocurrido un error:</b><br>Seleccione un archivo valido: csv o arff.</div>";
+            }
         }catch (IOException io) {
             return "<div class='alert alert-danger'><b>Ups! ha ocurrido un error:</b><br>"+io.getMessage()+"</div>";
+        }catch (Exception e){
+            return "<div class='alert alert-danger'><b>Ups! ha ocurrido un error:</b><br>"+e.getMessage()+"</div>";
         }
     }
 
