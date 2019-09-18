@@ -1,7 +1,7 @@
 // ************** Generate the tree diagram	 *****************
 var margin = { top: 30, right: 200, bottom: 10, left: 200 },
 width = $("#content").width() - margin.right - margin.left,
-height = 500 - margin.top - margin.bottom;
+height = margin.top - margin.bottom;
 var i = 0, duration = 750, root;
 var tree = d3.layout.tree().size([height, width]);
 var diagonal = d3.svg.diagonal().projection(function(d) {
