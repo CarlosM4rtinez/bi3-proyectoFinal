@@ -10,7 +10,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
         <link rel="icon" href="./recursos/icon.png" sizes="32x32" />
-        <title>Reglas de Asociacion - Analisis Descriptivo</title>
+        <title>Clustering (Agrupacion) - Analisis Descriptivo</title>
         <!-- Custom fonts for this template-->
         <link href="./recursos/fontawesome-free/css/all.min.css" rel="stylesheet"
               type="text/css">
@@ -21,9 +21,9 @@
         <link href="./css/template/sb-admin-2.min.css" rel="stylesheet">
         <!-- Functions scripts -->
         <link rel='stylesheet' href='./css/style.css' type='text/css' media='all' />
-        <link rel="stylesheet" href="./css/grapho.css" type='text/css' media='all'>
         <script src="./js/jquery-3.4.1.min.js"></script>
-        <script src="./js/functions.js"></script>
+        <script src="./js/clustering/functions.js"></script>
+        <script type="text/javascript" src="./js/clustering/d3.v4.min.js"></script>
     </head>
 
     <body id="page-top">
@@ -49,25 +49,25 @@
                 <!-- Heading -->
                 <div class="sidebar-heading">Analisis Descriptivo</div>
                 <!-- Nav Item - Pages Collapse Menu -->
-                <li class="nav-item active"> 
-                    <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                <li class="nav-item"> 
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                         <i class="fas fa-fw fa-cog"></i> <span>Reglas de Asociacion</span>
                     </a>
-                    <div id="collapseOne" class="collapse show" aria-labelledby="headingTwo"data-parent="#accordionSidebar">
+                    <div id="collapseOne" class="collapse" aria-labelledby="headingTwo"data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Algoritmos:</h6>
-                            <a class="collapse-item" id="algoritmo1" href="reglas-de-asociacion.html?algoritmo=1">Apriori</a> 
-                            <a class="collapse-item" id="algoritmo2" href="reglas-de-asociacion.html?algoritmo=2">FPGrowth</a>
-                            <a class="collapse-item" id="algoritmo3" href="reglas-de-asociacion.html?algoritmo=3">Tertius</a>
+                            <a class="collapse-item" href="reglas-de-asociacion.html?algoritmo=1">Apriori</a> 
+                            <a class="collapse-item" href="reglas-de-asociacion.html?algoritmo=2">FPGrowth</a>
+                            <a class="collapse-item" href="reglas-de-asociacion.html?algoritmo=3">Tertius</a>
                         </div>
                     </div>
                 </li>
                 <!-- Nav Item - Pages Collapse Menu -->
-                <li class="nav-item"> 
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOneT" aria-expanded="true" aria-controls="collapseOneT">
+                <li class="nav-item active"> 
+                    <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseOneT" aria-expanded="false" aria-controls="collapseOneT">
                         <i class="fas fa-fw fa-cog"></i> <span>Clustering</span>
                     </a>
-                    <div id="collapseOneT" class="collapse" aria-labelledby="headingTwo"data-parent="#accordionSidebar">
+                    <div id="collapseOneT" class="collapse show" aria-labelledby="headingTwo"data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Algoritmos:</h6>
                             <a class="collapse-item" id="algoritmo1" href="agrupacion.html?algoritmo=1">SimpleKMeans</a> 
@@ -141,30 +141,38 @@
                         <div class="container-fluid">
                             <!-- Page Heading -->
                             <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                                <h1 class="h3 mb-0 text-gray-800">Reglas de Asociacion - Analisis Descriptivo</h1>
+                                <h1 class="h3 mb-0 text-gray-800">Clustering (Agrupacion) - Analisis Descriptivo</h1>
                             </div>
                             <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                                <form class="form-inline" id="form-mineria" action="./servicios/mineria/consumir" method="post" enctype="multipart/form-data">
+                                <form class="form-inline" id="form-mineria" action="./servicios/cluster/procesar" method="post" enctype="multipart/form-data">
                                     <div class="form-row">
                                         <div class="form-group col-md-5">
                                             <label for="file">Conjunto de datos</label>
-                                            <input id="file" class="form-control-file" data-action="./servicios/mineria/informacion" type="file" name="file" accept=".csv, .arff" required/>
+                                            <input id="file" class="form-control-file" data-action="./servicios/cluster/dataset" type="file" name="file" accept=".csv, .arff" required/>
                                         </div>
                                         <div class="form-group col-md-2">
                                             <label for="algoritmo">Algoritmo</label>
                                             <select id="algoritmo" name="algoritmo" class="form-control">
-                                                <option value="1">Apriori</option>
-                                                <option value="2">FPGrowth</option>
-                                                <option value="3">Tertius</option>
+                                                    <option value="1">SimpleKMeans</option>
+                                                    <option value="2">EM</option>
+                                                    <option value="3">Canopy</option>
+                                                    <option value="4">Cobweb</option>
                                             </select>
                                         </div>
-                                        <div class="form-group col-md-1">
-                                            <label for="reglas">Reglas</label>
-                                            <input type="number" id="reglas" name="reglas" class="form-control" min="5" max="50" value="15"/>
-                                        </div>
-                                        <div class="form-group col-md-1">
-                                            <label for="porcentaje">% Aceptacion</label>
-                                            <input type="number" id="porcentaje" name="reglas" class="form-control" min="5" max="100" value="70"/>
+                                        <div id="grups" class="form-group col-md-2">
+                                            <label for="numCluster">Numero de grupos</label>
+                                            <select id="numCluster" name="numCluster" class="form-control">
+                                                <option value="0"><span>Grupos...</span></option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                            </select>
                                         </div>
                                         <div class="form-group col-md-3 freverse">
                                             <button id="btnform-mineria" type="submit" class="btn btn-primary"><i class="fa fa-hourglass-half"></i> Analizar datos</button>
@@ -181,7 +189,7 @@
                                             <h6 class="m-0 font-weight-bold text-primary"><i class="fa fa-industry"></i> Conjunto de Datos</h6>
                                         </a>
                                         <div class="collapse show" id="collapseCardExample">
-                                            <div id="conjuntodatos" class="card-body center"></div>
+                                            <div id="dataset" class="card-body center"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -195,14 +203,32 @@
                                            class="d-block card-header py-3" data-toggle="collapse"
                                            role="button" aria-expanded="true"
                                            aria-controls="collapseCardExample5">
-                                            <h6 class="m-0 font-weight-bold text-primary"><i class="fa fa-sitemap"></i> Representación gráfica de Reglas de Asociacion</h6>
+                                            <h6 class="m-0 font-weight-bold text-primary"><i class="fa fa-sitemap"></i> Representación gráfica</h6>
                                         </a>
                                         <!-- Card Content - Collapse -->
                                         <div class="collapse show" id="collapseCardExample5">
-                                            <div class="card-body pr">
-                                                <span id="expandir" class="exp btn none"><i class="fa fa-arrows-alt"></i></span>
-                                                <div id="graph"></div>
-                                                <div id="graphBIG"></div>
+                                            <center><div id="graficaClusters" class="card-body"></div></center>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <!-- Collapsable Card Example -->
+                                    <div class="card shadow mb-4">
+                                        <!-- Card Header - Accordion -->
+                                        <a href="#collapseCardExample8"
+                                           class="d-block card-header py-3" data-toggle="collapse"
+                                           role="button" aria-expanded="true"
+                                           aria-controls="collapseCardExample8">
+                                            <h6 class="m-0 font-weight-bold text-primary"><i class="fa fa-sitemap"></i> Analisis</h6>
+                                        </a>
+                                        <!-- Card Content - Collapse -->
+                                        <div class="collapse show" id="collapseCardExample8">
+                                            <div class="card-body">
+                                                <div class="table-responsive">
+                                                    <div id="analisis"></div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -217,12 +243,12 @@
                                            class="d-block card-header py-3" data-toggle="collapse"
                                            role="button" aria-expanded="true"
                                            aria-controls="collapseCardExample1">
-                                            <h6 class="m-0 font-weight-bold text-primary"><i class="fa fa-table"></i> Descripción de relaciones del análisis</h6>
+                                            <h6 class="m-0 font-weight-bold text-primary"><i class="fa fa-table"></i> Atributos</h6>
                                         </a>
                                         <!-- Card Content - Collapse -->
                                         <div class="collapse show" id="collapseCardExample1">
                                             <div class="card-body">
-                                                <div id="tabledata"></div>
+                                                <div id="atributos"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -236,12 +262,12 @@
                                            class="d-block card-header py-3" data-toggle="collapse"
                                            role="button" aria-expanded="true"
                                            aria-controls="collapseCardExample2">
-                                            <h6 class="m-0 font-weight-bold text-primary"><i class="fa fa-list-ol"></i> Resumen estadístico del análisis</h6>
+                                            <h6 class="m-0 font-weight-bold text-primary"><i class="fa fa-list-ol"></i> Clusters</h6>
                                         </a>
                                         <!-- Card Content - Collapse -->
                                         <div class="collapse show" id="collapseCardExample2">
                                             <div class="card-body">
-                                                <div id="resumendata"></div>
+                                                <div id="clusters"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -282,6 +308,6 @@
         <!-- Custom scripts for all pages-->
         <script src="./js/sb-admin-2.min.js"></script>
         <script src="./js/d3.v5.min.js"></script>
-        <script src="./js/grapho.js"></script>
+        <script src="./js/clustering/clustering.js"></script>
     </body>
 </html>
