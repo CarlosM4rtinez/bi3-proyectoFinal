@@ -70,6 +70,8 @@ $(document).ready(function(){
                 $("#resumendata").html('<div class="rules"><h5>Interpretacion</h5><p align=left>'+data[0]+'</p></div>');
                 // Volvemos habilitar el boton
                 $("#btnform-mineria").prop("disabled", false);
+                // ocultamos el spinner
+                $(".lds-ring").remove();
             },
             error: function (e){
                 $("#graph,#tabledata,#resumendata").html('<p align=left>'+e.responseText+'</p>');
