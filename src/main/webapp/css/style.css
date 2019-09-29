@@ -10,6 +10,9 @@
     width: 100%;
     display: block;
 }
+.logo {
+    width: 70px;
+}
 .freverse{flex-flow: row-reverse!important;    align-items: flex-end!important;}
 .resultado {
     border: 1px solid #ccc;

@@ -33,6 +33,7 @@ public class DataMiningServices extends Application{
     /**
      * Servicio a consumir que apartir de un archivo .csv, .arf devuelve los datos analizados
      * dependiendo del algoritmo a ejecutar.
+     * @param reglas la cantidad de reglas de generar
      * @param algoritmo el algoritmo que se ejecutara para analizar el archivo
      * @param file el archivo con el conjunto de datos a analizar (.csv, .arf)
      * @param fileDetail detalles del archivo  que contiene los datos
@@ -42,15 +43,15 @@ public class DataMiningServices extends Application{
     @Path("consumir")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String consumir(@FormDataParam("algoritmo") String algoritmo, @FormDataParam("file") InputStream file, @FormDataParam("file") FormDataContentDisposition fileDetail){
+    public String consumir(@FormDataParam("reglas") int reglas, @FormDataParam("reglas") int porcentaje, @FormDataParam("algoritmo") String algoritmo, @FormDataParam("file") InputStream file, @FormDataParam("file") FormDataContentDisposition fileDetail){
         try {
             final Gson gson = new Gson();
             // Deinimos los ajustes para la ejecucion del algoritmo
             AjustesRA a = new AjustesRA();
             a.setDatosArchivo(dataMining.convertir(new BufferedReader(new InputStreamReader(file))));
             a.setAlgoritmo(Integer.parseInt(algoritmo));
-            a.setNumeroReglas(5);
-            a.setPorcentajeAceptacion(0.95); // valores de 0 a 1: ejemplo: 0.95, 0.99, 0.78
+            a.setNumeroReglas(reglas);
+            a.setPorcentajeAceptacion(porcentaje/100); // valores de 0 a 1: ejemplo: 0.95, 0.99, 0.78
             // Pasamos a analizar el archivo usando la mineria de datos.
             return gson.toJson(dataMining.mineria(a,1));
         }catch (IOException io) {
