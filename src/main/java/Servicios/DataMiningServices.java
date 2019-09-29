@@ -52,6 +52,7 @@ public class DataMiningServices extends Application{
             a.setAlgoritmo(Integer.parseInt(algoritmo));
             a.setNumeroReglas(reglas);
             a.setPorcentajeAceptacion(porcentaje/100); // valores de 0 a 1: ejemplo: 0.95, 0.99, 0.78
+            System.out.println((porcentaje/100)+"");
             // Pasamos a analizar el archivo usando la mineria de datos.
             return gson.toJson(dataMining.mineria(a,1));
         }catch (IOException io) {

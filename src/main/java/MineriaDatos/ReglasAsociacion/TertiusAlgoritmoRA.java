@@ -35,7 +35,9 @@ public class TertiusAlgoritmoRA implements Serializable{
     public String Tertius (AjustesRA ajustes) throws Exception{
         //Creamos el objeto de asociacion por FPGrwoth
         Tertius a = new Tertius();
-        a.setNumberLiterals(ajustes.getNumeroReglas()); // Asignamos el numero de reglas
+        a.setConfirmationValues(ajustes.getNumeroReglas()); // Asignamos el numero de reglas
+        a.setConfirmationThreshold(ajustes.getPorcentajeAceptacion());
+        a.setNumberLiterals(4);
         //Creamos el descriptivo apriori con los datos
         a.buildAssociations(ajustes.getData());
         //Se cargan los resultados de la asociacion apriori
@@ -47,7 +49,11 @@ public class TertiusAlgoritmoRA implements Serializable{
         SimpleLinkedList.LinkedListIterator resultados = a.getResults().iterator();
         int i= 0;
         while(resultados.hasNext()){
-            String[] datos = ((Rule) resultados.next()).toString().split(" ==> "); // 0: condiciones si u o, 1: entonces
+            Rule regla = (Rule) resultados.next();
+            String[] datos = regla.toString().split(" ==> "); // 0: condiciones si u o, 1: entonces
+            rta += "<li>"+regla.toString()+" </li>";
+            rta += "</b> con un <font color='green'><b>"+(int)(regla.getConfirmation()*100)
+                +  "%</b></font> de posibilidad.<br><br></li>";
         }
         return rta+"</ol>"; 
     }
@@ -62,7 +68,9 @@ public class TertiusAlgoritmoRA implements Serializable{
         List<ArrayList> listas = new ArrayList<>();
         //Creamos el objeto de asociacion por FPGrwoth
         Tertius a = new Tertius();
-        a.setNumberLiterals(ajustes.getNumeroReglas()); // Asignamos el numero de reglas
+        a.setConfirmationValues(ajustes.getNumeroReglas()); // Asignamos el numero de reglas
+        a.setConfirmationThreshold(ajustes.getPorcentajeAceptacion());
+        a.setNumberLiterals(4);
         //Creamos el descriptivo apriori con los datos
         a.buildAssociations(ajustes.getData());
         // Lista de nodos
@@ -72,6 +80,7 @@ public class TertiusAlgoritmoRA implements Serializable{
         //Obtenemos resultados
         SimpleLinkedList.LinkedListIterator resultados = a.getResults().iterator();
         int sec = 1; 
+        int numeroRegla = 1;
         while(resultados.hasNext()){
             String[] datos = ((Rule) resultados.next()).toString().split(" ==> "); // 0: condiciones si u o, 1: entonces
             // construimos el link
@@ -83,7 +92,7 @@ public class TertiusAlgoritmoRA implements Serializable{
                 // sacamos cada una de las condiciones por separado
                 String[] condiciones = stringCondiciones.split(" and ");
                 for (int j = 0; j < condiciones.length; j++) {
-                    Nodo nodo = this.crearNodoTertius(condiciones[j], "Si", sec, nodes.size());
+                    Nodo nodo = this.crearNodoTertius(condiciones[j], "Si", sec, nodes.size(), 0, numeroRegla);
                     // Guardamos el nodo en la lista de nodes
                     nodes.add(nodo);
                     //}
@@ -102,7 +111,7 @@ public class TertiusAlgoritmoRA implements Serializable{
                 }
             }else{
                 // sacamos la unica condicion
-                Nodo nodo = this.crearNodoTertius(stringCondiciones, "Si", sec, nodes.size());
+                Nodo nodo = this.crearNodoTertius(stringCondiciones, "Si", sec, nodes.size(), 0, numeroRegla);
                 // Guardamos el nodo en la lista de nodes
                 nodes.add(nodo);
                 if(link.getSource() == null){
@@ -129,7 +138,7 @@ public class TertiusAlgoritmoRA implements Serializable{
                 // sacamos cada una de las condiciones por separado
                 String[] entonces = stringEntonces.split(" or ");
                 for (int j = 0; j < entonces.length; j++) {
-                    Nodo nodo = this.crearNodoTertius(entonces[j], "O", sec, nodes.size());
+                    Nodo nodo = this.crearNodoTertius(entonces[j], "O", sec, nodes.size() , 0, numeroRegla);
                     // Guardamos el nodo en la lista de nodes
                     nodes.add(nodo);
                     if(link.getSource() == null){
@@ -147,7 +156,7 @@ public class TertiusAlgoritmoRA implements Serializable{
                 }
             }else{
                 // sacamos la unica condicion
-                Nodo nodo = this.crearNodoTertius(stringEntonces, "Entonces", sec, nodes.size());
+                Nodo nodo = this.crearNodoTertius(stringEntonces, "Entonces", sec, nodes.size(), ((Rule) resultados.next()).getConfirmation(), numeroRegla);
                 // Guardamos el nodo en la lista de nodes
                 nodes.add(nodo);
                 if(link.getSource() == null){
@@ -164,6 +173,7 @@ public class TertiusAlgoritmoRA implements Serializable{
                 sec++;
             }
             sec = 1;
+            numeroRegla++;
         }
         // Agregamos la lista de nodes y links a listas
         listas.add(0, (ArrayList) nodes);
@@ -178,15 +188,18 @@ public class TertiusAlgoritmoRA implements Serializable{
      * @param sizeNodes
      * @return 
      */
-    public Nodo crearNodoTertius(String cadena, String conector, int sec, int sizeNodes){
+    public Nodo crearNodoTertius(String cadena, String conector, int sec, int sizeNodes, double porcentaje, int numeroRegla){
         String[] partes = cadena.split(" = ");
         Nodo nodo = new Nodo();
         nodo.setAtributo(this.ra.replaceAttribute(partes[0]));
         nodo.setCompara(this.ra.replaceCompara("="));
         nodo.setValor(partes[1]);
         nodo.setId(sizeNodes);
-        nodo.setName("R"+(sizeNodes+1)+":"+sec+". "+conector+" "+nodo.getAtributo()+" "+nodo.getCompara()+" "+nodo.getValor());
-        System.out.println(nodo.getName());
+        if(conector.equalsIgnoreCase("Entonces")){
+            nodo.setName("R"+numeroRegla+":"+sec+". "+conector+" "+nodo.getAtributo()+" "+nodo.getCompara()+" "+nodo.getValor()+", "+(int)(porcentaje*100)+"%.");
+        }else{
+            nodo.setName("R"+numeroRegla+":"+sec+". "+conector+" "+nodo.getAtributo()+" "+nodo.getCompara()+" "+nodo.getValor());
+        }
         return nodo;
     }
 }
