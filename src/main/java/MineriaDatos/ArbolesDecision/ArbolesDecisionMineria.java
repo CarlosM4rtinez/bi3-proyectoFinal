@@ -36,18 +36,18 @@ public class ArbolesDecisionMineria implements Serializable {
     private DataMiningArboles dataMining;
 
     /**
-     * Algoritmo de weka Arbol RJ48
+     * Algoritmo de weka Arbol J48
      *
      *
      * @param data conjunto de datos
-     * @return el resultado del analisis del arbol RJ48
+     * @return el resultado del analisis del arbol J48
      */
     public String arbolRJ48(Instances data) {
         this.dataMining = new DataMiningArboles();
         try {
 
             JsonArboles jArbol = new JsonArboles();
-            //Creamos el objeto arbol rj48
+            //Creamos el objeto arbol j48
             J48 j48 = new J48();
             //clasificador de j48
             j48.buildClassifier(data);
@@ -57,7 +57,7 @@ public class ArbolesDecisionMineria implements Serializable {
             //Obtenemos el grafico del arbol generado por weka
             String[] arbol = j48.graph().split("\n");
 
-            String resBay = "<b><center>Resultados RJ48</center>"
+            String resBay = "<b><center>Resultados J48</center>"
                     + "<br>=======</br>"
                     + "Modelo generado indica los siguientes resultados: "
                     + "<br>=======</br>";
@@ -68,7 +68,7 @@ public class ArbolesDecisionMineria implements Serializable {
             resBay = resBay + ("<span class=\"text-success\">4. porcentaje de instancias incorrectamente clasificadas: </span>" + format.format(evalJ48.pctIncorrect()) + "<br>");
             resBay = resBay + ("<span class=\"text-success\">5. Numero de instancias incorrectamente clasificadas: </span>" + (int) evalJ48.incorrect() + "<br>");
             resBay = resBay + ("<span class=\"text-success\">6. Media del error absoluto: </span>" + format.format(evalJ48.meanAbsoluteError()) + "<br>");
-            resBay = resBay + ("<span class=\"text-success\">7." + evalJ48.toMatrixString("Matriz de confucion </span>").replace("\n", "<br>"));
+            resBay = resBay + ("<span class=\"text-success\">7." + evalJ48.toMatrixString("Matriz de confusión </span>").replace("\n", "<br>"));
 
             jArbol.setNumeroInstancias((int) evalJ48.numInstances());
             jArbol.setInstanciasCorrectas(format.format(evalJ48.pctCorrect()));
@@ -88,7 +88,7 @@ public class ArbolesDecisionMineria implements Serializable {
 
         } catch (Exception ex) {
             // ex.printStackTrace();
-            return "El error en RJ48 es: " + ex.getMessage();
+            return "El error en J48 es: " + ex.getMessage();
         }
     }
 
@@ -140,7 +140,7 @@ public class ArbolesDecisionMineria implements Serializable {
 
             String resPu = transformacionJ48JSON(arbol,2);
 
-            listaRetorno.add(this.dataMining.encabezado(data) + "\n" + resBay + "<span class='text-success'><br>Objeto JSON:</span><br>" + resPu);
+            listaRetorno.add(this.dataMining.encabezado(data) + "\n" + resBay);
             listaRetorno.add(resPu);
 
             return gson.toJson(listaRetorno);
@@ -183,7 +183,7 @@ public class ArbolesDecisionMineria implements Serializable {
             resBay = resBay + ("<span class=\"text-success\">4. porcentaje de instancias incorrectamente clasificadas: </span>" + format.format(evalRdTree.pctIncorrect()) + "<br>");
             resBay = resBay + ("<span class=\"text-success\">5. Numero de instancias incorrectamente clasificadas: </span>" + (int) evalRdTree.incorrect() + "<br>");
             resBay = resBay + ("<span class=\"text-success\">6. Media del error absoluto: </span>" + format.format(evalRdTree.meanAbsoluteError()) + "<br>");
-            resBay = resBay + ("<span class=\"text-success\">7." + evalRdTree.toMatrixString("Matriz de confucion </span>").replace("\n", "<br>"));
+            resBay = resBay + ("<span class=\"text-success\">7." + evalRdTree.toMatrixString("Matriz de confusión </span>").replace("\n", "<br>"));
 
             jArbol.setNumeroInstancias((int) evalRdTree.numInstances());
             jArbol.setInstanciasCorrectas(format.format(evalRdTree.pctCorrect()));
@@ -195,7 +195,7 @@ public class ArbolesDecisionMineria implements Serializable {
 
             String resPu = transformacionJ48JSON(arbol,2);
 
-            listaRetorno.add(this.dataMining.encabezado(data) + "\n" + resBay + "<span class='text-success'><br>Objeto JSON:</span><br>" + resPu);
+            listaRetorno.add(this.dataMining.encabezado(data) + "\n" + resBay);
             listaRetorno.add(resPu);
 
             return gson.toJson(listaRetorno);
