@@ -7,11 +7,11 @@
  * @returns si se encuentra retorna el valor de la variable, de lo contrario null
  * @author Johnny Alexander Salazar
  * @version 0.1
-*/
-function getUrlParametro(key){
+ */
+function getUrlParametro(key) {
     var url = decodeURIComponent(window.location.search.substring(1)),
-        parametros = url.split('&'),
-        claves;
+            parametros = url.split('&'),
+            claves;
     for (var i = 0; i < parametros.length; i++) {
         claves = parametros[i].split('=');
         if (claves[0] === key) {
@@ -22,11 +22,23 @@ function getUrlParametro(key){
     return null;
 }
 // Una vez cargado la pagina ejecutamos las acciones
-$(document).ready(function(){
+$(document).ready(function () {
+
+    $("body").on("change", "#algoritmo", function () {
+        if($(this).val() == 1){
+            $("#confidencia").show();
+            $("#confidencia").prev().show();
+        }else{
+            $("#confidencia").hide();
+            $("#confidencia").prev().hide();
+        }
+    });
+
+
     // Validamos si hay un algoritmo seleccionado
     var algoritmo = getUrlParametro('algoritmo');
     // agregamos la clase active al menu
-    $("#arboles"+algoritmo).addClass("active");
+    $("#arboles" + algoritmo).addClass("active");
     // asignamos el valor al select de opciones
     $("#algoritmo").val(algoritmo);
     // Consumimos los servicios por ajax de jquery
@@ -84,7 +96,7 @@ $(document).ready(function(){
             method: $("#formulario").attr("method"),
             type: $("#formulario").attr("method"),
             enctype: $("#formulario").attr("enctype"),
-            beforeSend: function (data) {   
+            beforeSend: function (data) {
                 $("#conjuntodatos").html('<div class="lds-ring"><div></div><div></div><div></div><div></div></div>');
             },
             success: function (data) {
@@ -97,12 +109,11 @@ $(document).ready(function(){
         e.preventDefault();
     });
     // Cambiamos el menu, dependiendo de la opcion seleccionada
-    $("body").on("change","#algoritmo", function(){
+    $("body").on("change", "#algoritmo", function () {
         var algoritmo = $(this).val();
         // Eliminamos el active en el menu del anterior algoritmo
         $("#arboles1,#arboles2,#arboles3").removeClass("active");
         // Asignamos el active en el menu del algoritmo seleccionado 
-        $("#arboles"+algoritmo).addClass("active");
+        $("#arboles" + algoritmo).addClass("active");
     });
 });
-

@@ -1,7 +1,7 @@
 // ************** Generate the tree diagram	 *****************
 var margin = { top: 30, right: 200, bottom: 10, left: 200 },
-width = $("#content").width() - margin.right - margin.left,
-height = margin.top - margin.bottom;
+width = $("#content").width()*3 - margin.right - margin.left,
+height = 700 - margin.top - margin.bottom;
 var i = 0, duration = 750, root;
 var tree = d3.layout.tree().size([height, width]);
 var diagonal = d3.svg.diagonal().projection(function(d) {
@@ -15,7 +15,7 @@ var svg = d3
 .append("g")
 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.select(self.frameElement).style("height", "500px");
+d3.select(self.frameElement).style("height", "1000px");
 
 function update(source) {
     // Compute the new tree layout.

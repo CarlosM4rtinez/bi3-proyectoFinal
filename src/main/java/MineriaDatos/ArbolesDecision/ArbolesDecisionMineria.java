@@ -42,15 +42,20 @@ public class ArbolesDecisionMineria implements Serializable {
      * @param data conjunto de datos
      * @return el resultado del analisis del arbol J48
      */
-    public String arbolRJ48(Instances data) {
+    public String arbolRJ48(Instances data, float coincidencia, int semilla) {
         this.dataMining = new DataMiningArboles();
         try {
 
             JsonArboles jArbol = new JsonArboles();
             //Creamos el objeto arbol j48
             J48 j48 = new J48();
-            //clasificador de j48
+
+            //se ingresa data
             j48.buildClassifier(data);
+            //Factor de concidencia            
+            j48.setConfidenceFactor(coincidencia);
+            //Semilla
+            j48.setSeed(semilla);
             //Objeto para validacion modelo con red bayesiana
             Evaluation evalJ48 = new Evaluation(data);
             evalJ48.crossValidateModel(j48, data, 10, new Random(1));
@@ -60,12 +65,14 @@ public class ArbolesDecisionMineria implements Serializable {
             String resBay = "<b><center>Resultados J48</center>"
                     + "<br>=======</br>"
                     + "Modelo generado indica los siguientes resultados: "
-                    + "<br>=======</br>";
+                    + "<br>=======</br><br />";
             //obtener resulados
-            resBay = resBay + ("<span class=\"text-success\">1. numero de instancias clasificadas: </span>" + (int) evalJ48.numInstances() + "<br>");
-            resBay = resBay + ("<span class=\"text-success\">2. porcentaje de instancias correctamente clasificadas: </span>" + format.format(evalJ48.pctCorrect()) + "<br>");
-            resBay = resBay + ("<span class=\"text-success\">3. numero de instancias correctamente clasificadas: </span>" + (int) evalJ48.correct() + "<br>");
-            resBay = resBay + ("<span class=\"text-success\">4. porcentaje de instancias incorrectamente clasificadas: </span>" + format.format(evalJ48.pctIncorrect()) + "<br>");
+            resBay = resBay + ("<span class=\"text-success\">Porcentaje ingresado de coincidencia: </span>(" + coincidencia*100 + "%)<br>");
+            resBay = resBay + ("<span class=\"text-success\">Valor ingresado de la semilla: </span>(" +semilla + ")<br/><br/>");
+            resBay = resBay + ("<span class=\"text-success\">1. Numero de instancias clasificadas: </span>" + (int) evalJ48.numInstances() + "<br>");
+            resBay = resBay + ("<span class=\"text-success\">2. Porcentaje de instancias correctamente clasificadas: </span>" + format.format(evalJ48.pctCorrect()) + "<br>");
+            resBay = resBay + ("<span class=\"text-success\">3. Numero de instancias correctamente clasificadas: </span>" + (int) evalJ48.correct() + "<br>");
+            resBay = resBay + ("<span class=\"text-success\">4. Porcentaje de instancias incorrectamente clasificadas: </span>" + format.format(evalJ48.pctIncorrect()) + "<br>");
             resBay = resBay + ("<span class=\"text-success\">5. Numero de instancias incorrectamente clasificadas: </span>" + (int) evalJ48.incorrect() + "<br>");
             resBay = resBay + ("<span class=\"text-success\">6. Media del error absoluto: </span>" + format.format(evalJ48.meanAbsoluteError()) + "<br>");
             resBay = resBay + ("<span class=\"text-success\">7." + evalJ48.toMatrixString("Matriz de confusión </span>").replace("\n", "<br>"));
@@ -78,7 +85,7 @@ public class ArbolesDecisionMineria implements Serializable {
             //jArbol.setMediaError(format.format(evalJ48.meanAbsoluteError()));
             //jArbol.setArbol(arbol);
 
-            String resPu = transformacionJ48JSON(arbol,1);
+            String resPu = transformacionJ48JSON(arbol, 1);
 
             //listaRetorno.add(this.dataMining.encabezado(data) + "\n" + resBay + "<span class='text-success'><br>Objeto JSON:</span><br>" + resPu);
             listaRetorno.add(this.dataMining.encabezado(data) + resBay);
@@ -99,10 +106,10 @@ public class ArbolesDecisionMineria implements Serializable {
      * @param data conjunto de datos
      * @return el resultado del analisis del arbol RandomTree
      */
-    public String arbolRandomTree(Instances data) {
+    public String arbolRandomTree(Instances data, int semilla) {
         this.dataMining = new DataMiningArboles();
         try {
-         
+
             JsonArboles jArbol = new JsonArboles();
             //Creamos el objeto random forest
             RandomTree rF = new RandomTree();
@@ -110,7 +117,9 @@ public class ArbolesDecisionMineria implements Serializable {
 
             rF.buildClassifier(data);
             //Objeto para validacion modelo con red bayesiana
-
+            
+            //Se ingresa valor de la semilla
+            rF.setSeed(semilla);
             Evaluation evalJ48 = new Evaluation(data);
 
             evalJ48.crossValidateModel(rF, data, 10, new Random(1));
@@ -121,12 +130,14 @@ public class ArbolesDecisionMineria implements Serializable {
             String resBay = "<b><center>Resultados Forest</center>"
                     + "<br>=======</br>"
                     + "Modelo generado indica los siguientes resultados: "
-                    + "<br>=======</br>";
+                    + "<br>=======</br> <br />";
             //obtener resulados
-            resBay = resBay + ("<b>1. numero de instancias clasificadas:<b>" + (int) evalJ48.numInstances() + "<br>");
-            resBay = resBay + ("<b>2. porcentaje de instancias correctamente clasificadas:</b>" + format.format(evalJ48.pctCorrect()) + "<br>");
-            resBay = resBay + ("<b>3. numero de instancias correctamente clasificadas:</b>" + (int) evalJ48.correct() + "<br>");
-            resBay = resBay + ("<b>4. porcentaje de instancias incorrectamente clasificadas:</b>" + format.format(evalJ48.pctIncorrect()) + "<br>");
+            resBay = resBay + ("<span class=\"text-success\">Valor ingresado de la semilla: </span>(" +semilla + ")<br/><br/>");
+
+            resBay = resBay + ("<b>1. Numero de instancias clasificadas:<b>" + (int) evalJ48.numInstances() + "<br>");
+            resBay = resBay + ("<b>2. Porcentaje de instancias correctamente clasificadas:</b>" + format.format(evalJ48.pctCorrect()) + "<br>");
+            resBay = resBay + ("<b>3. Numero de instancias correctamente clasificadas:</b>" + (int) evalJ48.correct() + "<br>");
+            resBay = resBay + ("<b>4. Porcentaje de instancias incorrectamente clasificadas:</b>" + format.format(evalJ48.pctIncorrect()) + "<br>");
             resBay = resBay + ("<b>5. Numero de instancias incorrectamente clasificadas:</b>" + (int) evalJ48.incorrect() + "<br>");
             resBay = resBay + ("<b>6. Media del error absoluto:</b>" + format.format(evalJ48.meanAbsoluteError()) + "<br>");
             // resBay = resBay + ("<b>7." + evalJ48.toMatrixString("Matriz de confucion").replace("\n", "<br>"));
@@ -138,7 +149,7 @@ public class ArbolesDecisionMineria implements Serializable {
             jArbol.setNumeroInstanciasIncorrectas((int) evalJ48.incorrect());
             // jArbol.setMediaError(format.format(evalJ48.meanAbsoluteError("Matriz de confucion").replace("\n", "<br>")));
 
-            String resPu = transformacionJ48JSON(arbol,2);
+            String resPu = transformacionJ48JSON(arbol, 2);
 
             listaRetorno.add(this.dataMining.encabezado(data) + "\n" + resBay);
             listaRetorno.add(resPu);
@@ -156,7 +167,7 @@ public class ArbolesDecisionMineria implements Serializable {
      * @param data conjunto de datos
      * @return el resultado del analisis del arbol REPTree
      */
-    public String arbolREPTree(Instances data) {
+    public String arbolREPTree(Instances data, int semilla) {
         this.dataMining = new DataMiningArboles();
         try {
 
@@ -165,22 +176,27 @@ public class ArbolesDecisionMineria implements Serializable {
             REPTree rTree = new REPTree();
 
             rTree.buildClassifier(data);
-
+            
+            rTree.setSeed(semilla);
+            
             Evaluation evalRdTree = new Evaluation(data);
             evalRdTree.crossValidateModel(rTree, data, 10, new Random(1));
 
             //Obtenemos el grafico del arbol generado por weka
             String arbol[] = rTree.graph().split("\n");
-            
+
             String resBay = "<b><center>Resultados LMT</center>"
                     + "<br>=======</br>"
                     + "Modelo generado indica los siguientes resultados: "
-                    + "<br>=======</br>";
+                    + "<br>=======</br><br />";
             //obtener resulados
-            resBay = resBay + ("<span class=\"text-success\">1. numero de instancias clasificadas: </span>" + (int) evalRdTree.numInstances() + "<br>");
-            resBay = resBay + ("<span class=\"text-success\">2. porcentaje de instancias correctamente clasificadas: </span>" + format.format(evalRdTree.pctCorrect()) + "<br>");
-            resBay = resBay + ("<span class=\"text-success\">3. numero de instancias correctamente clasificadas: </span>" + (int) evalRdTree.correct() + "<br>");
-            resBay = resBay + ("<span class=\"text-success\">4. porcentaje de instancias incorrectamente clasificadas: </span>" + format.format(evalRdTree.pctIncorrect()) + "<br>");
+            resBay = resBay + ("<span class=\"text-success\">Valor ingresado de la semilla: </span>(" +semilla + ")<br/><br/>");
+
+            
+            resBay = resBay + ("<span class=\"text-success\">1. Numero de instancias clasificadas: </span>" + (int) evalRdTree.numInstances() + "<br>");
+            resBay = resBay + ("<span class=\"text-success\">2. Porcentaje de instancias correctamente clasificadas: </span>" + format.format(evalRdTree.pctCorrect()) + "<br>");
+            resBay = resBay + ("<span class=\"text-success\">3. Numero de instancias correctamente clasificadas: </span>" + (int) evalRdTree.correct() + "<br>");
+            resBay = resBay + ("<span class=\"text-success\">4. Porcentaje de instancias incorrectamente clasificadas: </span>" + format.format(evalRdTree.pctIncorrect()) + "<br>");
             resBay = resBay + ("<span class=\"text-success\">5. Numero de instancias incorrectamente clasificadas: </span>" + (int) evalRdTree.incorrect() + "<br>");
             resBay = resBay + ("<span class=\"text-success\">6. Media del error absoluto: </span>" + format.format(evalRdTree.meanAbsoluteError()) + "<br>");
             resBay = resBay + ("<span class=\"text-success\">7." + evalRdTree.toMatrixString("Matriz de confusión </span>").replace("\n", "<br>"));
@@ -193,7 +209,7 @@ public class ArbolesDecisionMineria implements Serializable {
             //jArbol.setMediaError(format.format(evalJ48.meanAbsoluteError()));
             //jArbol.setArbol(evalJ48.toCumulativeMarginDistributionString());
 
-            String resPu = transformacionJ48JSON(arbol,2);
+            String resPu = transformacionJ48JSON(arbol, 2);
 
             listaRetorno.add(this.dataMining.encabezado(data) + "\n" + resBay);
             listaRetorno.add(resPu);
@@ -234,8 +250,7 @@ public class ArbolesDecisionMineria implements Serializable {
                     listaPadres.add(p);
                     //System.out.println("Padre -> " + identificador[0].substring(0, identificador[0].length()-2) +" nombre: "+ nombreNodo[1]); 
                 }
-            } 
-            //De locontrario creamos la lista de hijos
+            } //De locontrario creamos la lista de hijos
             else {
                 if (i > inicio) {//definimos los hijos
                     //Obtenemos id del padre y el valor de decision de este
@@ -261,9 +276,10 @@ public class ArbolesDecisionMineria implements Serializable {
 
     /**
      * Metodo que se encarga de armar la estructura del arbol y retornar el JSON
+     *
      * @param listPadre
      * @param listHijo
-     * @return 
+     * @return
      */
     private String armarArbol(List<Padre> listPadre, List<Hijo> listHijo) {
         List<NodoArbol> listNodo = new ArrayList<>();
@@ -277,14 +293,14 @@ public class ArbolesDecisionMineria implements Serializable {
             }
             //Se crean los hijos de cada nodo
             if (i > 0 && i < listPadre.size()) {
-                objNodo.setName(listHijo.get(i - 1).getNombre()+" - " +listPadre.get(i).getNombre());
+                objNodo.setName(listHijo.get(i - 1).getNombre() + " - " + listPadre.get(i).getNombre());
                 objNodo.setNodo(listHijo.get(i - 1).getIdH());
                 objNodo.setChildren(new ArrayList<NodoArbol>());
                 NodoArbol nodoPadre = obtenerPadre(listHijo.get(i - 1).getIdP(), listNodo);
-                nodoPadre.getChildren().add(objNodo);               
+                nodoPadre.getChildren().add(objNodo);
             }
             //Se agre cada hijo a la lista de nodos
-            listNodo.add(objNodo);            
+            listNodo.add(objNodo);
         }
         //System.out.println(gson.toJson(listNodo.get(0)));
         return gson.toJson(listNodo.get(0));

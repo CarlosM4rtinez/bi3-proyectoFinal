@@ -35,10 +35,11 @@ public class DataMiningArbolesServices extends Application {
     @Path("consumir")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String consumir(@FormDataParam("algoritmo") String algoritmo, @FormDataParam("file") InputStream file, @FormDataParam("file") FormDataContentDisposition fileDetail){
+    public String consumir(@FormDataParam("algoritmo") String algoritmo, @FormDataParam("file") InputStream file, @FormDataParam("file") FormDataContentDisposition fileDetail,
+            @FormDataParam("confidencia") float coincidencia,@FormDataParam("semilla") int semilla){
         try {
             // Pasamos a analizar el archivo usando la mineria de datos.
-            return dataMining.mineria(dataMining.convertir(new BufferedReader(new InputStreamReader(file))), Integer.parseInt(algoritmo));
+            return dataMining.mineria(dataMining.convertir(new BufferedReader(new InputStreamReader(file))), Integer.parseInt(algoritmo),coincidencia/100,semilla );
         }catch (IOException io) {
             return "Se ha presentado un error: "+io.getMessage();
         }

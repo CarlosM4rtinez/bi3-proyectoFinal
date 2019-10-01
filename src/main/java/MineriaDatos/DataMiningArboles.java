@@ -26,7 +26,7 @@ public class DataMiningArboles implements Serializable {
      * datos
      * @return
      */
-    public String mineria(String datos, int tipoAlgoritmo) {
+    public String mineria(String datos, int tipoAlgoritmo,float coincidencia,int semilla) {
         StringReader sr = new StringReader(datos);
         BufferedReader br = new BufferedReader(sr);
         try {
@@ -43,17 +43,17 @@ public class DataMiningArboles implements Serializable {
             switch (tipoAlgoritmo) {
                 case 1:
                     // Ejecuta el algoritmo de apriori
-                    resultado = raDataMining.arbolRJ48(data);
+                    resultado = raDataMining.arbolRJ48(data,coincidencia,semilla);
                     break;
 
                 case 2:
                     // Ejecuta el algoritmo de randomforest
-                    resultado = raDataMining.arbolRandomTree(data);
+                    resultado = raDataMining.arbolRandomTree(data,semilla);
                     break;
                     
                 case 3:
                     //Ejecuta el algoritmo RandomTree
-                    resultado = raDataMining.arbolREPTree(data);
+                    resultado = raDataMining.arbolREPTree(data,semilla);
                     break;
                 default:
             }
